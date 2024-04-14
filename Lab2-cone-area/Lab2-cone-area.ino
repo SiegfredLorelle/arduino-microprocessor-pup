@@ -7,28 +7,25 @@ void setup() {
 }
 
 void loop() {
-
+  // Prompt for the raduis and height of the cone
   float radius = getFloat("Radius of the cone: ");
-  Serial.println(radius);
+  Serial.println(radius, 2);
   float height = getFloat("Height of cone: ");
-  Serial.println(height);
+  Serial.println(height, 2);
 
+  // Solve for the volume of the cone
   float volume = M_PI * sq(radius) * height/3;
   Serial.print("Volume: ");
-  Serial.println(volume);
+  Serial.println(volume, 20);
 
-  // TODO: TSET TO PAG OKS NA ALIS PRINT
+  // Blink LED thrice base on its volume
   if (volume < 100) {
-    Serial.println("LOW");
     blinkLEDThrice(5000, 5000);
-
   }
-  else if (100 <= volume <= 500) {
-    Serial.println("MID");
+  else if (100 <= volume && volume <= 500) {
     blinkLEDThrice(3000, 5000);
   }
   else {
-    Serial.println("HIGHEST");
     blinkLEDThrice(1000, 3000);
   }
 
@@ -38,13 +35,12 @@ void loop() {
 
 float getFloat(char* message) {
   while (true) {
+    // Prompt for the an input
     Serial.print(message);
     while (!Serial.available()) {
     }
     String input = Serial.readStringUntil('\n');
     input.trim();
-
-    // TODO: CHECK FOR OVERFLOW (OVF)
 
     // Ensures input is not empty
     if (input.length() == 0) {

@@ -1,18 +1,18 @@
-const int btn1 = 0;
-const int btn2 = 1;
-const int btn3 = 2;
-const int btn4 = 3;
+const int BTN1 = 2;
+const int BTN2 = 3;
+const int BTN3 = 4;
+const int BTN4 = 5;
 
-const int LED1 = 4;
-const int LED2 = 5;
-const int LED3 = 6;
-const int LED4 = 7;
-const int LED5 = 8;
-const int LED6 = 9;
-const int LED7 = 10;
-const int LED8 = 11;
+const int LED1 = 6;
+const int LED2 = 7;
+const int LED3 = 8;
+const int LED4 = 9;
+const int LED5 = 10;
+const int LED6 = 11;
+const int LED7 = 12;
+const int LED8 = 13;
 
-const int LEDs[8] = {
+const int LEDS[8] = {
   LED1, 
   LED2, 
   LED3, 
@@ -22,16 +22,17 @@ const int LEDs[8] = {
   LED7, 
   LED8,
 };
+const int NUM_OF_LEDS = 8;
 
 bool isProcessOngoing = false;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(btn1, INPUT);
-  pinMode(btn2, INPUT);
-  pinMode(btn3, INPUT);
-  pinMode(btn4, INPUT);
+  pinMode(BTN1, INPUT_PULLUP);
+  pinMode(BTN2, INPUT_PULLUP);
+  pinMode(BTN3, INPUT_PULLUP);
+  pinMode(BTN4, INPUT_PULLUP);
 
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
@@ -45,34 +46,67 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  bool isBtn1Pressed = digitalRead(btn1);
-  bool isBtn2Pressed = digitalRead(btn2);
-  bool isBtn3Pressed = digitalRead(btn3);
-  bool isBtn4Pressed = digitalRead(btn4);
+  bool isBtn1Pressed = digitalRead(BTN1);
+  bool isBtn2Pressed = digitalRead(BTN2);
+  bool isBtn3Pressed = digitalRead(BTN3);
+  bool isBtn4Pressed = digitalRead(BTN4);
 
   if (isBtn1Pressed) {
+    Serial.println("1 PRESSED");
     blinkTraverse();
   }
-  else if (isBtn2Pressed) {
+  if (isBtn2Pressed) {
+    Serial.println("2 PRESSED");
     blinkInward(false);
   }
-  else if (isBtn3Pressed) {
-    blinkInward(true);
+  if (isBtn3Pressed) {
+    Serial.println("3 PRESSED");
+    // blinkInward(true);
+    clearLEDs();
   }
-  else if (isBtn4Pressed) {
-    blinkGapped();
+  if (isBtn4Pressed) {
+    Serial.println("4 PRESSED");
+    // blinkGapped();
+    litLEDs();
   }
 }
 
 
 void clearLEDs() {
+  int durationInMS = 1000;
+  int delayInMS = durationInMS / NUM_OF_LEDS;
+  Serial.println("CLEARING");
 
+  for (int i = 0; i < NUM_OF_LEDS; i++) {
+    digitalWrite(LEDS[i], LOW);
+    Serial.print("CLEARING: ");
+    Serial.println(i);
+  }
+}
+
+void litLEDs() {
+  Serial.println("LITTING");
+  for (int i = 0; i < NUM_OF_LEDS; i++) {
+    digitalWrite(LEDS[i], HIGH);
+    Serial.print("LIT: ");
+    Serial.println(i);
+  }
 }
 
 void blinkTraverse() {
+  int durationInMS = 1000;
+  int delayInMS = durationInMS / NUM_OF_LEDS;
 
-  for (int i = 0; i < sizeof(LEDs); i++) {
-    digitalWrite(LEDs[i], HIGH);
+  for (int i = 0; i < NUM_OF_LEDS; i++) {
+    clearLEDs();
+    digitalWrite(LEDS[i], HIGH);
+    delay(delayInMS);
+  }
+
+  for (int i = NUM_OF_LEDS - 2; i > 0; i--) {
+    clearLEDs();
+    digitalWrite(LEDS[i], HIGH);
+    delay(delayInMS);
   }
 }
 

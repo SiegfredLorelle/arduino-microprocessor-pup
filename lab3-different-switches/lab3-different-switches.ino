@@ -25,7 +25,7 @@ const int LEDS[8] = {
 const int NUM_OF_LEDS = 8;
 const int NUM_OF_LEDS_HALF = NUM_OF_LEDS / 2;
 
-int delayInMS = 100;
+// int delayInMS = 100;
 bool isProcessOngoing = false;
 
 void setup() {
@@ -69,8 +69,8 @@ void loop() {
   }
   if (isBtn4Pressed) {
     Serial.println("4 PRESSED");
-    // blinkGapped();
-    litLEDs();
+    blinkGapped();
+    // litLEDs();
   }
 
 
@@ -85,7 +85,6 @@ void clearLEDs() {
     // Serial.print("CLEARING: ");
     Serial.println(i);
   }
-    // delay(delayInMS);
 }
 
 void litLEDs() {
@@ -99,7 +98,7 @@ void litLEDs() {
 
 void blinkTraverse() {
   int durationInMS = 1000;
-  delayInMS = durationInMS / NUM_OF_LEDS;
+  int delayInMS = durationInMS / NUM_OF_LEDS;
 
   for (int i = 0; i < NUM_OF_LEDS; i++) {
     digitalWrite(LEDS[i], HIGH);
@@ -117,8 +116,7 @@ void blinkTraverse() {
 
 void blinkInward(bool keep) {
   int durationInMS = 1000;
-  delayInMS = durationInMS / NUM_OF_LEDS;
-  // delayInMS = 500;
+  int delayInMS = durationInMS / NUM_OF_LEDS;
   int i = 0;
   int j = NUM_OF_LEDS - 1;
 
@@ -146,8 +144,6 @@ void blinkInward(bool keep) {
   i--;
   j++;
   while (i != 0 && j != NUM_OF_LEDS - 1) {
-    Serial.print("i, j: ");
-    Serial.println(j);
     digitalWrite(LEDS[i], HIGH);
     digitalWrite(LEDS[j], HIGH);
     delay(delayInMS);
@@ -164,12 +160,23 @@ void blinkInward(bool keep) {
     digitalWrite(LEDS[i], HIGH);
     digitalWrite(LEDS[j], HIGH);
     delay(delayInMS);
-    // clearLEDs();
   }
 }
 
 void blinkGapped() {
+  int delayInMS = 500;
+  int i = NUM_OF_LEDS - 3;
+  int j = NUM_OF_LEDS - 1;
 
+  while (i > -1) {
+    digitalWrite(LEDS[i], HIGH);
+    digitalWrite(LEDS[j], HIGH);
+    delay(delayInMS);
+    digitalWrite(LEDS[i], LOW);
+    digitalWrite(LEDS[j], LOW);
+    i--;
+    j--;
+  }
 }
 
 /* Questions:
@@ -179,5 +186,5 @@ void blinkGapped() {
 4. 1 sec kada ilaw, or 1 sec total ung traverse
 
 TODO:
-1. Check for previous state to finish ung kulang
+1. Check for previous state to finish ung kulang sa btn1 at btn2
 */

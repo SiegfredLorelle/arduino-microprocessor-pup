@@ -25,6 +25,7 @@ const int LEDS[8] = {
 const int NUM_OF_LEDS = 8;
 const int NUM_OF_LEDS_HALF = NUM_OF_LEDS / 2;
 
+int delayInMS = 100;
 bool isProcessOngoing = false;
 
 void setup() {
@@ -51,7 +52,9 @@ void loop() {
   bool isBtn2Pressed = digitalRead(BTN2);
   bool isBtn3Pressed = digitalRead(BTN3);
   bool isBtn4Pressed = digitalRead(BTN4);
+  
 
+  clearLEDs();
   if (isBtn1Pressed) {
     Serial.println("1 PRESSED");
     blinkTraverse();
@@ -62,8 +65,7 @@ void loop() {
   }
   if (isBtn3Pressed) {
     Serial.println("3 PRESSED");
-    // blinkInward(true);
-    clearLEDs();
+    blinkInward(true);
   }
   if (isBtn4Pressed) {
     Serial.println("4 PRESSED");
@@ -83,6 +85,7 @@ void clearLEDs() {
     // Serial.print("CLEARING: ");
     Serial.println(i);
   }
+    // delay(delayInMS);
 }
 
 void litLEDs() {
@@ -96,7 +99,7 @@ void litLEDs() {
 
 void blinkTraverse() {
   int durationInMS = 1000;
-  int delayInMS = durationInMS / NUM_OF_LEDS;
+  delayInMS = durationInMS / NUM_OF_LEDS;
 
   for (int i = 0; i < NUM_OF_LEDS; i++) {
     digitalWrite(LEDS[i], HIGH);
@@ -114,32 +117,54 @@ void blinkTraverse() {
 
 void blinkInward(bool keep) {
   int durationInMS = 1000;
-  int delayInMS = durationInMS / NUM_OF_LEDS_HALF;
-
+  delayInMS = durationInMS / NUM_OF_LEDS;
+  // delayInMS = 500;
   int i = 0;
   int j = NUM_OF_LEDS - 1;
+
   while (i < j) {
     digitalWrite(LEDS[i], HIGH);
     digitalWrite(LEDS[j], HIGH);
     delay(delayInMS);
+
+    if (!keep) {
     digitalWrite(LEDS[i], LOW);
     digitalWrite(LEDS[j], LOW);
+    }
     i++;
     j--;
   }
 
-  i -= 2;
-  j += 2;
+  if (keep) {
+    clearLEDs();
+  }
+  else {
+  i--;
+  j++;
+  }
+
+  i--;
+  j++;
   while (i != 0 && j != NUM_OF_LEDS - 1) {
     Serial.print("i, j: ");
     Serial.println(j);
     digitalWrite(LEDS[i], HIGH);
     digitalWrite(LEDS[j], HIGH);
     delay(delayInMS);
+
+    if (!keep) {
     digitalWrite(LEDS[i], LOW);
     digitalWrite(LEDS[j], LOW);
+    }
     i--;
     j++;
+  }
+
+  if (keep) {
+    digitalWrite(LEDS[i], HIGH);
+    digitalWrite(LEDS[j], HIGH);
+    delay(delayInMS);
+    // clearLEDs();
   }
 }
 
@@ -152,4 +177,7 @@ void blinkGapped() {
 2.  ano mangyayare kapag multiple buttons pinindot
 3. kapag may ongoing process, maooveride ba kapag pumindot uli
 4. 1 sec kada ilaw, or 1 sec total ung traverse
+
+TODO:
+1. Check for previous state to finish ung kulang
 */

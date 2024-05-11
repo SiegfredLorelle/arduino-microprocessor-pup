@@ -23,6 +23,7 @@ const int LEDS[8] = {
   LED8,
 };
 const int NUM_OF_LEDS = 8;
+const int NUM_OF_LEDS_HALF = NUM_OF_LEDS / 2;
 
 bool isProcessOngoing = false;
 
@@ -69,17 +70,17 @@ void loop() {
     // blinkGapped();
     litLEDs();
   }
+
+
 }
 
 
 void clearLEDs() {
-  int durationInMS = 1000;
-  int delayInMS = durationInMS / NUM_OF_LEDS;
-  Serial.println("CLEARING");
+  // Serial.println("CLEARING");
 
   for (int i = 0; i < NUM_OF_LEDS; i++) {
     digitalWrite(LEDS[i], LOW);
-    Serial.print("CLEARING: ");
+    // Serial.print("CLEARING: ");
     Serial.println(i);
   }
 }
@@ -88,7 +89,7 @@ void litLEDs() {
   Serial.println("LITTING");
   for (int i = 0; i < NUM_OF_LEDS; i++) {
     digitalWrite(LEDS[i], HIGH);
-    Serial.print("LIT: ");
+    // Serial.print("LIT: ");
     Serial.println(i);
   }
 }
@@ -98,20 +99,48 @@ void blinkTraverse() {
   int delayInMS = durationInMS / NUM_OF_LEDS;
 
   for (int i = 0; i < NUM_OF_LEDS; i++) {
-    clearLEDs();
     digitalWrite(LEDS[i], HIGH);
     delay(delayInMS);
+    digitalWrite(LEDS[i], LOW);
+
   }
 
   for (int i = NUM_OF_LEDS - 2; i > 0; i--) {
-    clearLEDs();
     digitalWrite(LEDS[i], HIGH);
     delay(delayInMS);
+    digitalWrite(LEDS[i], LOW);
   }
 }
 
 void blinkInward(bool keep) {
+  int durationInMS = 1000;
+  int delayInMS = durationInMS / NUM_OF_LEDS_HALF;
 
+  int i = 0;
+  int j = NUM_OF_LEDS - 1;
+  while (i < j) {
+    digitalWrite(LEDS[i], HIGH);
+    digitalWrite(LEDS[j], HIGH);
+    delay(delayInMS);
+    digitalWrite(LEDS[i], LOW);
+    digitalWrite(LEDS[j], LOW);
+    i++;
+    j--;
+  }
+
+  i -= 2;
+  j += 2;
+  while (i != 0 && j != NUM_OF_LEDS - 1) {
+    Serial.print("i, j: ");
+    Serial.println(j);
+    digitalWrite(LEDS[i], HIGH);
+    digitalWrite(LEDS[j], HIGH);
+    delay(delayInMS);
+    digitalWrite(LEDS[i], LOW);
+    digitalWrite(LEDS[j], LOW);
+    i--;
+    j++;
+  }
 }
 
 void blinkGapped() {
@@ -122,5 +151,5 @@ void blinkGapped() {
 1. magkakahiwalay ba ung problem 1, 2, 3 like tig hiwa hiwalay ng program
 2.  ano mangyayare kapag multiple buttons pinindot
 3. kapag may ongoing process, maooveride ba kapag pumindot uli
-4. 
+4. 1 sec kada ilaw, or 1 sec total ung traverse
 */

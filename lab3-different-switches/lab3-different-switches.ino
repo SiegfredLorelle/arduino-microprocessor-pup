@@ -1,18 +1,26 @@
-const int BTN1 = 2;
-const int BTN2 = 3;
-const int BTN3 = 4;
-const int BTN4 = 5;
+const int NUM_OF_BTNS = 4;
+const byte BTN1 = 2;
+const byte BTN2 = 3;
+const byte BTN3 = 4;
+const byte BTN4 = 5;
+const byte BTNS[NUM_OF_BTNS] = {
+  BTN1, 
+  BTN2,
+  BTN3, 
+  BTN4,
+};
 
-const int LED1 = 6;
-const int LED2 = 7;
-const int LED3 = 8;
-const int LED4 = 9;
-const int LED5 = 10;
-const int LED6 = 11;
-const int LED7 = 12;
-const int LED8 = 13;
-
-const int LEDS[8] = {
+const int NUM_OF_LEDS = 8;
+const int NUM_OF_LEDS_HALF = NUM_OF_LEDS / 2;
+const byte LED1 = 6;
+const byte LED2 = 7;
+const byte LED3 = 8;
+const byte LED4 = 9;
+const byte LED5 = 10;
+const byte LED6 = 11;
+const byte LED7 = 12;
+const byte LED8 = 13;
+const byte LEDS[NUM_OF_LEDS] = {
   LED1, 
   LED2, 
   LED3, 
@@ -22,84 +30,96 @@ const int LEDS[8] = {
   LED7, 
   LED8,
 };
-const int NUM_OF_LEDS = 8;
-const int NUM_OF_LEDS_HALF = NUM_OF_LEDS / 2;
 
-// int delayInMS = 100;
-bool isProcessOngoing = false;
+byte isBtnsPressed[NUM_OF_BTNS] = {
+  LOW,
+  LOW,
+  LOW,
+  LOW,
+};
+
+int lastBtnPressed = -1;
+
+int durationInMS = 1000;
+int delayInMS = durationInMS / NUM_OF_LEDS;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(BTN1, INPUT_PULLUP);
-  pinMode(BTN2, INPUT_PULLUP);
-  pinMode(BTN3, INPUT_PULLUP);
-  pinMode(BTN4, INPUT_PULLUP);
 
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  pinMode(LED3, OUTPUT);
-  pinMode(LED4, OUTPUT);
-  pinMode(LED5, OUTPUT);
-  pinMode(LED6, OUTPUT);
-  pinMode(LED7, OUTPUT);
-  pinMode(LED8, OUTPUT);
+  for (int i = 0; i < NUM_OF_BTNS; i++) {
+    pinMode(BTNS[i], INPUT_PULLUP);
+  }
+
+  for (int i = 0; i < NUM_OF_LEDS; i++) {
+    pinMode(LEDS[i], OUTPUT);
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  bool isBtn1Pressed = digitalRead(BTN1);
-  bool isBtn2Pressed = digitalRead(BTN2);
-  bool isBtn3Pressed = digitalRead(BTN3);
-  bool isBtn4Pressed = digitalRead(BTN4);
-  
+  int i = 0;
+  while (i < NUM_OF_BTNS) {
+    isBtnsPressed[i] = digitalRead(BTNS[i]);
+    Serial.print(digitalRead(BTNS[i]));
+    Serial.print(digitalRead(BTN1));
+    i++;
+  }
 
+  handleEdgeCases();
   clearLEDs();
-  if (isBtn1Pressed) {
-    Serial.println("1 PRESSED");
+  
+  if (isBtnsPressed[0]) {
     blinkTraverse();
+    lastBtnPressed = 0;
   }
-  if (isBtn2Pressed) {
-    Serial.println("2 PRESSED");
+  if (isBtnsPressed[1]) {
     blinkInward(false);
+    lastBtnPressed = 1;
+
   }
-  if (isBtn3Pressed) {
-    Serial.println("3 PRESSED");
+  if (isBtnsPressed[2]) {
     blinkInward(true);
+    lastBtnPressed = 2;
+
   }
-  if (isBtn4Pressed) {
-    Serial.println("4 PRESSED");
+  if (isBtnsPressed[3]) {
     blinkGapped();
-    // litLEDs();
+    lastBtnPressed = 3;
   }
-
-
 }
 
+
+void handleEdgeCases() {
+  bool is123Pressed = false;
+  for (int i = 0; i < NUM_OF_BTNS - 1; i++) {
+    is123Pressed |= isBtnsPressed[i];
+  }
+  if (!is123Pressed) {
+    if (lastBtnPressed == 0) {
+      digitalWrite(LEDS[0], HIGH);
+      delay(delayInMS);
+      digitalWrite(LEDS[0], LOW);
+    }
+    else if (lastBtnPressed == 1) {
+      digitalWrite(LEDS[0], HIGH);
+      digitalWrite(LEDS[NUM_OF_LEDS - 1], HIGH);
+      delay(delayInMS);
+      digitalWrite(LEDS[0], LOW);
+      digitalWrite(LEDS[NUM_OF_LEDS - 1], LOW);
+    }
+    lastBtnPressed = -1;
+  }
+}
 
 void clearLEDs() {
-  // Serial.println("CLEARING");
-
   for (int i = 0; i < NUM_OF_LEDS; i++) {
     digitalWrite(LEDS[i], LOW);
-    // Serial.print("CLEARING: ");
-    Serial.println(i);
-  }
-}
-
-void litLEDs() {
-  Serial.println("LITTING");
-  for (int i = 0; i < NUM_OF_LEDS; i++) {
-    digitalWrite(LEDS[i], HIGH);
-    // Serial.print("LIT: ");
-    Serial.println(i);
   }
 }
 
 void blinkTraverse() {
-  int durationInMS = 1000;
-  int delayInMS = durationInMS / NUM_OF_LEDS;
-
+  clearLEDs();
   for (int i = 0; i < NUM_OF_LEDS; i++) {
     digitalWrite(LEDS[i], HIGH);
     delay(delayInMS);
@@ -115,11 +135,10 @@ void blinkTraverse() {
 }
 
 void blinkInward(bool keep) {
-  int durationInMS = 1000;
-  int delayInMS = durationInMS / NUM_OF_LEDS;
   int i = 0;
   int j = NUM_OF_LEDS - 1;
 
+  clearLEDs();
   while (i < j) {
     digitalWrite(LEDS[i], HIGH);
     digitalWrite(LEDS[j], HIGH);
@@ -167,7 +186,8 @@ void blinkGapped() {
   int delayInMS = 500;
   int i = NUM_OF_LEDS - 3;
   int j = NUM_OF_LEDS - 1;
-
+  
+  clearLEDs();
   while (i > -1) {
     digitalWrite(LEDS[i], HIGH);
     digitalWrite(LEDS[j], HIGH);
@@ -178,13 +198,3 @@ void blinkGapped() {
     j--;
   }
 }
-
-/* Questions:
-1. magkakahiwalay ba ung problem 1, 2, 3 like tig hiwa hiwalay ng program
-2.  ano mangyayare kapag multiple buttons pinindot
-3. kapag may ongoing process, maooveride ba kapag pumindot uli
-4. 1 sec kada ilaw, or 1 sec total ung traverse
-
-TODO:
-1. Check for previous state to finish ung kulang sa btn1 at btn2
-*/

@@ -1,3 +1,4 @@
+const int MAX_COUNT = 15;
 const int NUM_OF_DIGITS = 10;
 const int NUM_OF_SEGMENTS = 7;
 const byte ONES_PIN[NUM_OF_SEGMENTS] = {
@@ -39,10 +40,22 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   isSwitchOn = digitalRead(SWITCH);
-  Serial.println(isSwitchOn);
+  // Serial.println(isSwitchOn);
 
   // TODO: MAKE 4 BIT UP/DOWN COUNTER
-
+  if (isSwitchOn) {
+    currentDigit++;
+  }
+  else {
+    currentDigit--;
+  }
+  if (currentDigit < 0) {
+    currentDigit = MAX_COUNT;
+  }
+  if (currentDigit > MAX_COUNT) {
+    currentDigit = 0;
+  }
+  Serial.println(currentDigit);
 
 
 }

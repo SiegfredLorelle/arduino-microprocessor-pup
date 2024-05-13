@@ -1,12 +1,15 @@
-const int MAX_COUNT = 15;
+const int MAX_COUNT = 3;
+const int MAX_DIGITS = 1;
+
 const int NUM_OF_DIGITS = 10;
 const int NUM_OF_SEGMENTS = 7;
-const byte ONES_PIN[NUM_OF_SEGMENTS] = {
-  0, 1, 2, 3, 4, 5, 6
+
+const byte SEVEN_SEG_PINS[][NUM_OF_SEGMENTS] = {
+  {0, 1, 2, 3, 4, 5, 6},
+  {7, 8, 9, 10, 11, 12, 13}
 };
-const byte TENS_PIN[NUM_OF_SEGMENTS] = {
-  7, 8, 9, 10, 11, 12, 13
-};
+
+
 
 const byte BCD_TO_7SEG[NUM_OF_DIGITS][NUM_OF_SEGMENTS] = {
   {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW},  // 0
@@ -25,16 +28,18 @@ const byte SWITCH = A5;
 
 bool isSwitchOn;
 int currentDigit;
+bool isCathode = false;
 
 void setup() {
   Serial.begin(9600);
   // put your setup code here, to run once:
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
-    pinMode(ONES_PIN[i], OUTPUT);
-    pinMode(TENS_PIN[i], OUTPUT);
-    Serial.println(i);
+    for (int j = 0; j < MAX_DIGITS; j++) {
+      pinMode(SEVEN_SEG_PINS[j][i], OUTPUT);
+    }
   }
   pinMode(SWITCH, INPUT_PULLUP);
+  clearAll();
 }
 
 void loop() {
@@ -42,7 +47,6 @@ void loop() {
   isSwitchOn = digitalRead(SWITCH);
   // Serial.println(isSwitchOn);
 
-  // TODO: MAKE 4 BIT UP/DOWN COUNTER
   if (isSwitchOn) {
     currentDigit++;
   }
@@ -55,7 +59,68 @@ void loop() {
   if (currentDigit > MAX_COUNT) {
     currentDigit = 0;
   }
-  Serial.println(currentDigit);
 
-
+  // LightAll();
+  // delay(500);
+  // clearAll();
+  delay(300);
+  intTo7Seg(currentDigit);
 }
+
+void clearAll() {
+  for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
+    for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
+      digitalWrite(SEVEN_SEG_PINS[j][i], !isCathode);
+    }
+  }
+}
+void LightAll() {
+  for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
+    for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
+      digitalWrite(SEVEN_SEG_PINS[j][i], isCathode);
+    }
+  }
+}
+
+
+void intTo7Seg(int integer) {
+  bool isCurrOnesSegHigh, isCurrTensSegHigh;
+
+  
+  char intAsChars[MAX_DIGITS];
+  itoa(integer, intAsChars, 10);
+  Serial.print(intAsChars[0]);
+  for (int i = 0; i < MAX_DIGITS; i++) {
+    intAsChars[i];
+  }
+
+  if (integer < pow(10, (MAX_DIGITS - 1))) {
+    intAsChars[1] = intAsChars[0];
+    intAsChars[0] = '0';
+  }
+
+  
+  for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
+
+    // isCurrOnesSegHigh = BCD_TO_7SEG[intAsChars[1] - '0'][i];
+    // isCurrTensSegHigh = BCD_TO_7SEG[intAsChars[0] - '0'][i];
+
+    for (int k = 0; k < MAX_DIGITS; k++) {
+      
+        byte isCurrSegHigh = BCD_TO_7SEG[intAsChars[k] - '0'][i];
+
+      if (!isCathode) {
+        isCurrSegHigh = !isCurrSegHigh;
+      }
+      digitalWrite(SEVEN_SEG_PINS[MAX_DIGITS - k - 1][i], isCurrSegHigh);
+    }
+  }
+}
+
+/* TODO:
+SOLVE MAX DIGITS AUTOMATICALLY
+RENAME BCD TO INT
+REMOVE LIGHT ALL
+TEST multiple places
+PLACE IN FUNCTIONS 
+COMMENTS*/

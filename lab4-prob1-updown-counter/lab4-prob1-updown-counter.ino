@@ -158,11 +158,9 @@ int updatecurrentNum(int num, bool isSwitchOn) {
 }
 
 bool getPolarity(bool isHigh) {
+  /* Invert polarity if using common anode 7 segment displays */
       if (!IS_CATHODE) {
         return !isHigh;
       }
       return isHigh;
 } 
-/* TODO:
-PLACE IN FUNCTIONS 
-COMMENTS*/

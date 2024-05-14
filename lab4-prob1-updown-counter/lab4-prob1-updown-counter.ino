@@ -2,12 +2,12 @@ const int NUM_OF_DIGITS = 10;
 const int NUM_OF_SEGMENTS = 7;
 
 // Feel free to change it to any positive number that can be contained in the 7 segment(s)
-const int MAX_COUNT = 15;
+const int MAX_COUNT =  15;
 
 // Pins
 // {a, b, c ,d ,e ,f, g} of 7 segments
 const byte SEVEN_SEG_PINS[][NUM_OF_SEGMENTS] = {
-  {0, 1, 2, 3, 4, 5, 6},      // Ones place
+  {A4, A3, 2, 3, 4, 5, 6},      // Ones place
   {7, 8, 9, 10, 11, 12, 13},  // Tens place
                               // Add more pins if using hundreds place
                               // Add more pins if using thousands place
@@ -35,7 +35,9 @@ const byte ERROR_7SEG[NUM_OF_SEGMENTS] = {
 
 // Set to true if 7 segment displays used are common cathode
 const bool IS_CATHODE = false;
-// 
+// Feel free to adjust delay duration
+const int DELAY_DURATION = 325;
+
 int maxDigits = 0;
 int numOf7Segments;
 
@@ -74,10 +76,9 @@ void loop() {
         digitalWrite(SEVEN_SEG_PINS[i][j], !ERROR_7SEG[j]);
       }
     }
-    delay(300);
+    delay(DELAY_DURATION);
     clearAll();
-    delay(300);
-
+    delay(DELAY_DURATION);
     return;
   }
 
@@ -97,25 +98,14 @@ void loop() {
     currentDigit = 0;
   }
 
-  // LightAll();
-  // delay(500);
-  // clearAll();
-  delay(300);
   intTo7Seg(currentDigit);
+  delay(DELAY_DURATION);
 }
 
 void clearAll() {
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
     for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
       digitalWrite(SEVEN_SEG_PINS[j][i], !IS_CATHODE);
-    }
-  }
-}
-void LightAll() {
-  for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
-    for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-      digitalWrite(SEVEN_SEG_PINS[j][i], IS_CATHODE);
-      // Serial.println(i);
     }
   }
 }
@@ -128,10 +118,24 @@ void intTo7Seg(int integer) {
   char intAsChars[maxDigits];
   itoa(integer, intAsChars, 10);
 
-  if (integer < pow(10, (maxDigits - 1))) {
-    intAsChars[1] = intAsChars[0];
+
+  float tmpIntAsFloat = max(integer, 1);
+  while (tmpIntAsFloat < pow(10, (maxDigits - 1))) {
+    for (int i = maxDigits - 2; i >= 0; i--) {
+      intAsChars[i + 1] = intAsChars[i];
+      
+    }
     intAsChars[0] = '0';
-  }
+    tmpIntAsFloat *= 10;
+
+
+    }
+
+    for (int j = 0; j < maxDigits; j++) {
+    Serial.print(intAsChars[j]);
+    }
+    Serial.println("");
+
 
   
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
@@ -142,15 +146,12 @@ void intTo7Seg(int integer) {
       if (!IS_CATHODE) {
         isCurrSegHigh = !isCurrSegHigh;
       }
+
       digitalWrite(SEVEN_SEG_PINS[maxDigits - k - 1][i], isCurrSegHigh);
     }
   }
 }
 
 /* TODO:
-SOLVE MAX DIGITS AUTOMATICALLY
-RENAME DIGIT TO INT
-REMOVE LIGHT ALL
-TEST multiple places
 PLACE IN FUNCTIONS 
 COMMENTS*/

@@ -1,17 +1,23 @@
-const int MAX_COUNT = 3;
-const int MAX_DIGITS = 1;
-
 const int NUM_OF_DIGITS = 10;
 const int NUM_OF_SEGMENTS = 7;
 
+// Feel free to change it to any positive number that can be contained in the 7 segment(s)
+const int MAX_COUNT = 15;
+
+// Pins
+// {a, b, c ,d ,e ,f, g} of 7 segments
 const byte SEVEN_SEG_PINS[][NUM_OF_SEGMENTS] = {
-  {0, 1, 2, 3, 4, 5, 6},
-  {7, 8, 9, 10, 11, 12, 13}
+  {0, 1, 2, 3, 4, 5, 6},      // Ones place
+  {7, 8, 9, 10, 11, 12, 13},  // Tens place
+                              // Add more pins if using hundreds place
+                              // Add more pins if using thousands place
+                              // ...
 };
+const byte SWITCH = A5;
 
 
 
-const byte BCD_TO_7SEG[NUM_OF_DIGITS][NUM_OF_SEGMENTS] = {
+const byte DIGIT_TO_7SEG[NUM_OF_DIGITS][NUM_OF_SEGMENTS] = {
   {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW},  // 0
   {LOW, HIGH, HIGH, LOW, LOW, LOW, LOW},      // 1
   {HIGH, HIGH, LOW, HIGH, HIGH, LOW, HIGH},   // 2
@@ -23,27 +29,58 @@ const byte BCD_TO_7SEG[NUM_OF_DIGITS][NUM_OF_SEGMENTS] = {
   {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH}, // 8
   {HIGH, HIGH, HIGH, HIGH, LOW, HIGH, HIGH},  // 9
 };
+const byte ERROR_7SEG[NUM_OF_SEGMENTS] = {
+  HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH
+};
 
-const byte SWITCH = A5;
+// Set to true if 7 segment displays used are common cathode
+const bool IS_CATHODE = false;
+// 
+int maxDigits = 0;
+int numOf7Segments;
 
 bool isSwitchOn;
 int currentDigit;
-bool isCathode = false;
 
 void setup() {
   Serial.begin(9600);
   // put your setup code here, to run once:
+  int tmpMaxCount = MAX_COUNT; 
+  while (tmpMaxCount > 0) {
+    tmpMaxCount /= 10;
+    maxDigits++;
+  }
+  numOf7Segments = sizeof(SEVEN_SEG_PINS) / sizeof(int);
+
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
-    for (int j = 0; j < MAX_DIGITS; j++) {
+    for (int j = 0; j <= numOf7Segments; j++) {
       pinMode(SEVEN_SEG_PINS[j][i], OUTPUT);
+
     }
   }
   pinMode(SWITCH, INPUT_PULLUP);
+  
+  
   clearAll();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  // Serial.println(maxDigits);
+  if (MAX_COUNT <= 0) {
+    
+    for (int i = 0; i < numOf7Segments; i++) {
+      for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
+        digitalWrite(SEVEN_SEG_PINS[i][j], !ERROR_7SEG[j]);
+      }
+    }
+    delay(300);
+    clearAll();
+    delay(300);
+
+    return;
+  }
+
   isSwitchOn = digitalRead(SWITCH);
   // Serial.println(isSwitchOn);
 
@@ -70,14 +107,15 @@ void loop() {
 void clearAll() {
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
     for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-      digitalWrite(SEVEN_SEG_PINS[j][i], !isCathode);
+      digitalWrite(SEVEN_SEG_PINS[j][i], !IS_CATHODE);
     }
   }
 }
 void LightAll() {
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
     for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-      digitalWrite(SEVEN_SEG_PINS[j][i], isCathode);
+      digitalWrite(SEVEN_SEG_PINS[j][i], IS_CATHODE);
+      // Serial.println(i);
     }
   }
 }
@@ -87,39 +125,31 @@ void intTo7Seg(int integer) {
   bool isCurrOnesSegHigh, isCurrTensSegHigh;
 
   
-  char intAsChars[MAX_DIGITS];
+  char intAsChars[maxDigits];
   itoa(integer, intAsChars, 10);
-  Serial.print(intAsChars[0]);
-  for (int i = 0; i < MAX_DIGITS; i++) {
-    intAsChars[i];
-  }
 
-  if (integer < pow(10, (MAX_DIGITS - 1))) {
+  if (integer < pow(10, (maxDigits - 1))) {
     intAsChars[1] = intAsChars[0];
     intAsChars[0] = '0';
   }
 
   
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
-
-    // isCurrOnesSegHigh = BCD_TO_7SEG[intAsChars[1] - '0'][i];
-    // isCurrTensSegHigh = BCD_TO_7SEG[intAsChars[0] - '0'][i];
-
-    for (int k = 0; k < MAX_DIGITS; k++) {
+    for (int k = 0; k < maxDigits; k++) {
       
-        byte isCurrSegHigh = BCD_TO_7SEG[intAsChars[k] - '0'][i];
+      byte isCurrSegHigh = DIGIT_TO_7SEG[intAsChars[k] - '0'][i];
 
-      if (!isCathode) {
+      if (!IS_CATHODE) {
         isCurrSegHigh = !isCurrSegHigh;
       }
-      digitalWrite(SEVEN_SEG_PINS[MAX_DIGITS - k - 1][i], isCurrSegHigh);
+      digitalWrite(SEVEN_SEG_PINS[maxDigits - k - 1][i], isCurrSegHigh);
     }
   }
 }
 
 /* TODO:
 SOLVE MAX DIGITS AUTOMATICALLY
-RENAME BCD TO INT
+RENAME DIGIT TO INT
 REMOVE LIGHT ALL
 TEST multiple places
 PLACE IN FUNCTIONS 

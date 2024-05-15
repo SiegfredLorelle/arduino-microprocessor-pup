@@ -56,25 +56,23 @@ void loop() {
   bool isLDR1On = !digitalRead(LDR1);
   bool isLDR2On = !digitalRead(LDR2);
 
-
-  // Serial.println(isLDR1On);
   if (isLDR1On == isLDR2On) {
     turnAll7SegToZeroes();
     Serial.println("00");
-    Serial.println("00");
   }
   else if (isLDR1On) {
-    scrollTextIn7Seg(true);
+    scrollTextIn7Seg(HELLO_TO_7SEG, true);
     Serial.println("SCROLLING FROM LEFT TO RIGHT");
   }
   else {
-    scrollTextIn7Seg(false);
-    Serial.println("SCROLLING RIGHT");
+    // scrollTextIn7Seg(BYE, false);
+    Serial.println("SCROLLING RIGHT TO LEFT");
   }
 
   // Update 7 seg based on LDR1 and LDR2;
   delay(DELAY_DURATION);
 }
+
 
 void clear7Seg(int SevenSegIndices[], int size) {
   /* Turn off all LEDS */
@@ -94,48 +92,37 @@ void turnAll7SegToZeroes() {
 }
 
 
-// void scrollTextIn7Seg(byte wordPinMaps, bool is LeftToRight) {
-
-// }
-
-void scrollTextIn7Seg(bool isLeftToRight) {
+void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], bool isLeftToRight) {
   int numOfWhiteSpacesOnSide = (WORD_LENGTH / 2) + 1;
   int helloIndex = currentCharIndex - numOfWhiteSpacesOnSide - 1;
+  int i, j, isCurrSegHigh;
+
   if( currentCharIndex >= WORD_LENGTH + (numOfWhiteSpacesOnSide * 2)) {
     currentCharIndex = 0;
   }
-  if (currentCharIndex <= numOfWhiteSpacesOnSide 
-      || currentCharIndex > WORD_LENGTH + numOfWhiteSpacesOnSide) {
-    int indicesToOff[] = {0};    
-    clear7Seg(indicesToOff, 1);
-  }
-  else {
-    for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-        bool isCurrSeg1High = getPolarity(HELLO_TO_7SEG[helloIndex][j]);
-        digitalWrite(SEVEN_SEG_PINS[0][j], isCurrSeg1High);
+
+  for (i = 0; i < numOf7Segments; i++) {
+    if (currentCharIndex + i <= numOfWhiteSpacesOnSide 
+    || currentCharIndex + i > WORD_LENGTH + numOfWhiteSpacesOnSide) {
+      int indicesToOff[] = {i};    
+      clear7Seg(indicesToOff, 1);
+    } 
+
+    else {
+      j = 0;
+      while (j < NUM_OF_SEGMENTS) {
+        isCurrSegHigh = getPolarity(wordPinMaps[helloIndex + i][j]);
+        digitalWrite(SEVEN_SEG_PINS[i][j], isCurrSegHigh);
+        j++;
+      }      
     }
   }
-
-  if (currentCharIndex + 1 <= numOfWhiteSpacesOnSide || currentCharIndex + 1 > WORD_LENGTH + numOfWhiteSpacesOnSide) {
-    int indicesToOff[] = {1};    
-    clear7Seg(indicesToOff, 1);
-  }
-  else {
-
-      helloIndex += 1;
-      for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-        bool isCurrSeg2High = getPolarity(HELLO_TO_7SEG[helloIndex][j]);
-        digitalWrite(SEVEN_SEG_PINS[1][j], isCurrSeg2High);
-      }
-    }
-
   currentCharIndex++;
 }
 
 
   // TODO: BYE FOR RIGHT TO LEFT
   // CHANGE HELLO TO BE FROM LEFT TO RIGHT
-  // USE LOOPS INSTEAD OF MANUAL WIRINTG
 
 
 

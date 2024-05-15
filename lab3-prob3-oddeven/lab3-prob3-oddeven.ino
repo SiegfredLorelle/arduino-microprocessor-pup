@@ -34,7 +34,7 @@ void loop() {
   // Check button presses
   int i = 0;
   while (i < NUM_OF_BTNS) {
-    isBtnsPressed[i] = digitalRead(BTNS[i]);
+    isBtnsPressed[i] = !digitalRead(BTNS[i]);
     i++;
   }
 

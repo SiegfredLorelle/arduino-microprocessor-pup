@@ -34,10 +34,12 @@ const byte BYE_TO_7SEG[][NUM_OF_SEGMENTS] = {
 // Set to true if 7 segment displays used are common cathode
 const bool IS_CATHODE = false;
 // Feel free to adjust delay duration
-const int DELAY_DURATION = 500;
+const int DELAY_DURATION = 325;
 
 bool isSwitchOn;
-int currentCharIndex = 0;
+int currCharIndex = 0;
+int prevState = 0;
+int currState = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -62,17 +64,21 @@ void loop() {
   bool isLDR2On = !digitalRead(LDR2);
 
   if (isLDR1On == isLDR2On) {
+    currState = 0;
+    checkStateChange();
     turnAll7SegToZeroes();
-    // Serial.println("00");
   }
   else if (isLDR1On) {
+    currState = 1;
+    checkStateChange();
     scrollTextIn7Seg(HELLO_TO_7SEG, HELLO_LENGTH, true);
-    Serial.println("SCROLLING FROM LEFT TO RIGHT");
   }
   else {
+    currState = 2;
+    checkStateChange();
     scrollTextIn7Seg(BYE_TO_7SEG, BYE_LENGTH, false);
-    Serial.println("SCROLLING RIGHT TO LEFT");
   }
+
 
   // Update 7 seg based on LDR1 and LDR2;
   delay(DELAY_DURATION);
@@ -98,22 +104,24 @@ void turnAll7SegToZeroes() {
 
 
 void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], int wordLength, bool isLeftToRight) {
+
+
   int numOfWhiteSpacesOnSide = (wordLength / 2) + 1;
-  int helloIndex = currentCharIndex - numOfWhiteSpacesOnSide - 1;
+  int helloIndex = currCharIndex - numOfWhiteSpacesOnSide - 1;
   int i, j, isCurrSegHigh;
 
   int charactersSize = wordLength + (numOfWhiteSpacesOnSide * 2);
-  if (currentCharIndex < 0) {
-      currentCharIndex = charactersSize - 1;
+  if (currCharIndex < 0) {
+      currCharIndex = charactersSize - 1;
   }
-  if (currentCharIndex >= charactersSize) {
-      currentCharIndex = 0;
+  if (currCharIndex >= charactersSize) {
+      currCharIndex = 0;
   }
 
 
   for (i = 0; i < NUM_OF_7SEGS; i++) {
-    if (currentCharIndex + i <= numOfWhiteSpacesOnSide 
-    || currentCharIndex + i > wordLength + numOfWhiteSpacesOnSide) {
+    if (currCharIndex + i <= numOfWhiteSpacesOnSide 
+    || currCharIndex + i > wordLength + numOfWhiteSpacesOnSide) {
       int indicesToOff[] = {i};    
       clear7Seg(indicesToOff, 1);
     } 
@@ -128,17 +136,19 @@ void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], int wordLength,
     }
   }
 
-  currentCharIndex++;
+  currCharIndex++;
   if (isLeftToRight) {
-    currentCharIndex -= 2;
+    currCharIndex -= 2;
   }
-  Serial.println(currentCharIndex);
 }
 
 
-  // RESET INDEX WHEN CHANGING STATE
-
-
+void checkStateChange() {
+    if (prevState != currState) {
+  prevState = currState;
+  currCharIndex = 0;
+  }
+}
 
 bool getPolarity(bool isHigh) {
   /* Invert polarity if using common anode 7 segment displays */

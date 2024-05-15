@@ -1,9 +1,7 @@
-const int WORD_LENGTH = 5; // Because 'hello' contains 5 characters
+const int NUM_OF_7SEGS = 2;
 const int NUM_OF_SEGMENTS = 7;
-int numOf7Segments;
 
-// Pins
-// {a, b, c ,d ,e ,f, g} of 7 segments
+// Pins {a, b, c ,d ,e ,f, g} of 7 segments
 const byte SEVEN_SEG_PINS[][NUM_OF_SEGMENTS] = {
   {7, 8, 9, 10, 11, 12, 13},  // 7 segment display 1
   {A4, A3, 2, 3, 4, 5, 6},      // 7 segment display 2
@@ -13,16 +11,24 @@ const byte SEVEN_SEG_PINS[][NUM_OF_SEGMENTS] = {
 const byte LDR1 = A2;
 const byte LDR2 = A1;
 
-// '0' mapping of 7 segment
+
+// Character mapping to 7 segments
+const int HELLO_LENGTH = 5;
+const int BYE_LENGTH = 3;
 const byte ZERO_TO_7SEG[NUM_OF_SEGMENTS] = {
   HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW  // 0
 };
-const byte HELLO_TO_7SEG[WORD_LENGTH][NUM_OF_SEGMENTS] = {
+const byte HELLO_TO_7SEG[][NUM_OF_SEGMENTS] = {
   {LOW, HIGH, HIGH, LOW, HIGH, HIGH, HIGH},   // H
   {HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH},   // E
   {LOW, LOW, LOW, HIGH, HIGH, HIGH, LOW},     // L
   {LOW, LOW, LOW, HIGH, HIGH, HIGH, LOW},     // L
   {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW}   // O
+};
+const byte BYE_TO_7SEG[][NUM_OF_SEGMENTS] = {
+  {LOW, LOW, HIGH, HIGH, HIGH, HIGH, HIGH},   // b
+  {LOW, HIGH, HIGH, HIGH, LOW, HIGH, HIGH},   // y
+  {HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH},   // E
 };
 
 // Set to true if 7 segment displays used are common cathode
@@ -36,9 +42,8 @@ int currentCharIndex = 0;
 void setup() {
   Serial.begin(9600);
   // Assign mode for all pins 
-  numOf7Segments = sizeof(SEVEN_SEG_PINS) / sizeof(int);
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
-    for (int j = 0; j <= numOf7Segments; j++) {
+    for (int j = 0; j <= NUM_OF_7SEGS; j++) {
       pinMode(SEVEN_SEG_PINS[j][i], OUTPUT);
     }
   }
@@ -61,11 +66,11 @@ void loop() {
     Serial.println("00");
   }
   else if (isLDR1On) {
-    scrollTextIn7Seg(HELLO_TO_7SEG, true);
+    scrollTextIn7Seg(HELLO_TO_7SEG, HELLO_LENGTH, true);
     Serial.println("SCROLLING FROM LEFT TO RIGHT");
   }
   else {
-    // scrollTextIn7Seg(BYE, false);
+    scrollTextIn7Seg(BYE_TO_7SEG, BYE_LENGTH, false);
     Serial.println("SCROLLING RIGHT TO LEFT");
   }
 
@@ -84,7 +89,7 @@ void clear7Seg(int SevenSegIndices[], int size) {
 }
 
 void turnAll7SegToZeroes() {
-  for (int i = 0; i < numOf7Segments; i++) {
+  for (int i = 0; i < NUM_OF_7SEGS; i++) {
     for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
       digitalWrite(SEVEN_SEG_PINS[i][j], getPolarity(ZERO_TO_7SEG[j]));
     }
@@ -92,18 +97,18 @@ void turnAll7SegToZeroes() {
 }
 
 
-void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], bool isLeftToRight) {
-  int numOfWhiteSpacesOnSide = (WORD_LENGTH / 2) + 1;
+void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], int wordLength, bool isLeftToRight) {
+  int numOfWhiteSpacesOnSide = (wordLength / 2) + 1;
   int helloIndex = currentCharIndex - numOfWhiteSpacesOnSide - 1;
   int i, j, isCurrSegHigh;
 
-  if( currentCharIndex >= WORD_LENGTH + (numOfWhiteSpacesOnSide * 2)) {
+  if( currentCharIndex >= wordLength + (numOfWhiteSpacesOnSide * 2)) {
     currentCharIndex = 0;
   }
 
-  for (i = 0; i < numOf7Segments; i++) {
+  for (i = 0; i < NUM_OF_7SEGS; i++) {
     if (currentCharIndex + i <= numOfWhiteSpacesOnSide 
-    || currentCharIndex + i > WORD_LENGTH + numOfWhiteSpacesOnSide) {
+    || currentCharIndex + i > wordLength + numOfWhiteSpacesOnSide) {
       int indicesToOff[] = {i};    
       clear7Seg(indicesToOff, 1);
     } 
@@ -123,6 +128,7 @@ void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], bool isLeftToRi
 
   // TODO: BYE FOR RIGHT TO LEFT
   // CHANGE HELLO TO BE FROM LEFT TO RIGHT
+  // RESET INDEX WHEN CHANGING STATE
 
 
 

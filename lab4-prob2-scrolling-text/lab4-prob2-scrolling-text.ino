@@ -1,13 +1,14 @@
-const int NUM_OF_7SEGS = 2;
-const int NUM_OF_SEGMENTS = 7;
+const int NUM_OF_7SEGMENTS = 2;
+const int NUM_OF_SEGMENT_PER_DISPLAY = 7;
 
 // Pins {a, b, c ,d ,e ,f, g} of 7 segments
-const byte SEVEN_SEG_PINS[][NUM_OF_SEGMENTS] = {
-  {7, 8, 9, 10, 11, 12, 13},  // 7 segment display 1
+const byte SEVEN_SEGMENT_DISPLAY_PINS[NUM_OF_7SEGMENTS][NUM_OF_SEGMENT_PER_DISPLAY] = {
+  {7, 8, 9, 10, 11, 12, 13},    // 7 segment display 1
   {A4, A3, 2, 3, 4, 5, 6},      // 7 segment display 2
-                              // Add more pins to display more characters
-                              // ...
+                                // Add more 7 segment pins to display more characters
+                                // ...
 };
+
 const byte LDR1 = A2;
 const byte LDR2 = A1;
 
@@ -15,17 +16,17 @@ const byte LDR2 = A1;
 // Character mapping to 7 segments
 const int HELLO_LENGTH = 5;
 const int BYE_LENGTH = 3;
-const byte ZERO_TO_7SEG[NUM_OF_SEGMENTS] = {
+const byte ZERO_TO_7SEG[NUM_OF_SEGMENT_PER_DISPLAY] = {
   HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW  // 0
 };
-const byte HELLO_TO_7SEG[][NUM_OF_SEGMENTS] = {
+const byte HELLO_TO_7SEG[][NUM_OF_SEGMENT_PER_DISPLAY] = {
   {LOW, HIGH, HIGH, LOW, HIGH, HIGH, HIGH},   // H
   {HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH},   // E
   {LOW, LOW, LOW, HIGH, HIGH, HIGH, LOW},     // L
   {LOW, LOW, LOW, HIGH, HIGH, HIGH, LOW},     // L
   {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW}   // O
 };
-const byte BYE_TO_7SEG[][NUM_OF_SEGMENTS] = {
+const byte BYE_TO_7SEG[][NUM_OF_SEGMENT_PER_DISPLAY] = {
   {LOW, LOW, HIGH, HIGH, HIGH, HIGH, HIGH},   // b
   {LOW, HIGH, HIGH, HIGH, LOW, HIGH, HIGH},   // y
   {HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH},   // E
@@ -34,9 +35,8 @@ const byte BYE_TO_7SEG[][NUM_OF_SEGMENTS] = {
 // Set to true if 7 segment displays used are common cathode
 const bool IS_CATHODE = false;
 // Feel free to adjust delay duration
-const int DELAY_DURATION = 325;
+const int DELAY_DURATION = 225;
 
-bool isSwitchOn;
 int currCharIndex = 0;
 int prevState = 0;
 int currState = 0;
@@ -44,25 +44,25 @@ int currState = 0;
 void setup() {
   Serial.begin(9600);
   // Assign mode for all pins 
-  for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
-    for (int j = 0; j <= NUM_OF_7SEGS; j++) {
-      pinMode(SEVEN_SEG_PINS[j][i], OUTPUT);
+  for (int i = 0; i < NUM_OF_7SEGMENTS; i++) {
+    for (int j = 0; j < NUM_OF_SEGMENT_PER_DISPLAY; j++) {
+      pinMode(SEVEN_SEGMENT_DISPLAY_PINS[i][j], OUTPUT);
     }
   }
   pinMode(LDR1, INPUT_PULLUP);
   pinMode(LDR2, INPUT_PULLUP);
   
-  // Start will no lit LED
+  // Start with no segments off
   int indicesToZero[] = {0, 1};
-  int size = sizeof(indicesToZero) / sizeof(int);
-  clear7Seg(indicesToZero, 2);
+  clear7Seg(indicesToZero, NUM_OF_7SEGMENTS);
 }
 
 void loop() {
-  // Get based on LDR1 and LDR2 states 
+  // Read LDR states; LDR is considered on if exposed to enough light
   bool isLDR1On = !digitalRead(LDR1);
   bool isLDR2On = !digitalRead(LDR2);
 
+  // Update 7 segment based on LDR states
   if (isLDR1On == isLDR2On) {
     currState = 0;
     checkStateChange();
@@ -79,38 +79,37 @@ void loop() {
     scrollTextIn7Seg(BYE_TO_7SEG, BYE_LENGTH, false);
   }
 
-
-  // Update 7 seg based on LDR1 and LDR2;
   delay(DELAY_DURATION);
 }
 
 
 void clear7Seg(int SevenSegIndices[], int size) {
-  /* Turn off all LEDS */
+  /* Turn off specific segment displays */
   for (int i = 0; i < size; i++) {
-    for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-      digitalWrite(SEVEN_SEG_PINS[SevenSegIndices[i]][j], getPolarity(IS_CATHODE));
+    for (int j = 0; j < NUM_OF_SEGMENT_PER_DISPLAY; j++) {
+      digitalWrite(SEVEN_SEGMENT_DISPLAY_PINS[SevenSegIndices[i]][j], getPolarity(IS_CATHODE));
     }
   }
 }
 
 void turnAll7SegToZeroes() {
-  for (int i = 0; i < NUM_OF_7SEGS; i++) {
-    for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-      digitalWrite(SEVEN_SEG_PINS[i][j], getPolarity(ZERO_TO_7SEG[j]));
+  /* Turn all 7 segments to '0' */
+  for (int i = 0; i < NUM_OF_7SEGMENTS; i++) {
+    for (int j = 0; j < NUM_OF_SEGMENT_PER_DISPLAY; j++) {
+      digitalWrite(SEVEN_SEGMENT_DISPLAY_PINS[i][j], getPolarity(ZERO_TO_7SEG[j]));
     }
   }
 }
 
 
-void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], int wordLength, bool isLeftToRight) {
+void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENT_PER_DISPLAY], int wordLength, bool isLeftToRight) {
+  /* Scroll each character in wordPinMaps var on direction of isLeftToRight var */
 
-
+  // Add white spaces space at the start and end of the word to act as buffer 
   int numOfWhiteSpacesOnSide = (wordLength / 2) + 1;
-  int helloIndex = currCharIndex - numOfWhiteSpacesOnSide - 1;
-  int i, j, isCurrSegHigh;
-
   int charactersSize = wordLength + (numOfWhiteSpacesOnSide * 2);
+
+  // Adjust currCharIndex if it goes out of bounds  
   if (currCharIndex < 0) {
       currCharIndex = charactersSize - 1;
   }
@@ -118,32 +117,37 @@ void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], int wordLength,
       currCharIndex = 0;
   }
 
-
-  for (i = 0; i < NUM_OF_7SEGS; i++) {
+  // Update 7 segment accordingly
+  for (int i = 0; i < NUM_OF_7SEGMENTS; i++) {
+    // Update 7segment to off if character is a whitespace buffer
+    int displayIndex = currCharIndex - numOfWhiteSpacesOnSide - 1 + i;
     if (currCharIndex + i <= numOfWhiteSpacesOnSide 
     || currCharIndex + i > wordLength + numOfWhiteSpacesOnSide) {
       int indicesToOff[] = {i};    
       clear7Seg(indicesToOff, 1);
     } 
 
+    // Update 7segment to the character
     else {
-      j = 0;
-      while (j < NUM_OF_SEGMENTS) {
-        isCurrSegHigh = getPolarity(wordPinMaps[helloIndex + i][j]);
-        digitalWrite(SEVEN_SEG_PINS[i][j], isCurrSegHigh);
-        j++;
-      }      
+      for (int j = 0; j < NUM_OF_SEGMENT_PER_DISPLAY; j++) {
+        bool isCurrSegmentOn = getPolarity(wordPinMaps[displayIndex][j]);
+        digitalWrite(SEVEN_SEGMENT_DISPLAY_PINS[i][j], isCurrSegmentOn);
+      }
     }
   }
 
-  currCharIndex++;
+  // Increment or decrement based on the direction of the text
   if (isLeftToRight) {
-    currCharIndex -= 2;
+    currCharIndex--;
+  }
+  else {
+    currCharIndex++;
   }
 }
 
 
 void checkStateChange() {
+  /* Detect state changes then resets character/word index */
     if (prevState != currState) {
   prevState = currState;
   currCharIndex = 0;

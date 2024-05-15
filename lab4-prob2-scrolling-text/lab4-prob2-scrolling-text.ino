@@ -53,8 +53,8 @@ void setup() {
 
 void loop() {
   // Get based on LDR1 and LDR2 states 
-  bool isLDR1On = digitalRead(LDR1);
-  bool isLDR2On = digitalRead(LDR2);
+  bool isLDR1On = !digitalRead(LDR1);
+  bool isLDR2On = !digitalRead(LDR2);
 
 
   // Serial.println(isLDR1On);
@@ -65,7 +65,7 @@ void loop() {
   }
   else if (isLDR1On) {
     scrollTextIn7Seg(true);
-    Serial.println("SCROLLING LEFT");
+    Serial.println("SCROLLING FROM LEFT TO RIGHT");
   }
   else {
     scrollTextIn7Seg(false);
@@ -93,12 +93,19 @@ void turnAll7SegToZeroes() {
   }
 }
 
+
+// void scrollTextIn7Seg(byte wordPinMaps, bool is LeftToRight) {
+
+// }
+
 void scrollTextIn7Seg(bool isLeftToRight) {
-  int helloIndex = currentCharIndex -  4;
-  if( currentCharIndex >= WORD_LENGTH * 2) {
+  int numOfWhiteSpacesOnSide = (WORD_LENGTH / 2) + 1;
+  int helloIndex = currentCharIndex - numOfWhiteSpacesOnSide - 1;
+  if( currentCharIndex >= WORD_LENGTH + (numOfWhiteSpacesOnSide * 2)) {
     currentCharIndex = 0;
   }
-  if (currentCharIndex <= 3 || currentCharIndex > WORD_LENGTH + 3) {
+  if (currentCharIndex <= numOfWhiteSpacesOnSide 
+      || currentCharIndex > WORD_LENGTH + numOfWhiteSpacesOnSide) {
     int indicesToOff[] = {0};    
     clear7Seg(indicesToOff, 1);
   }
@@ -109,7 +116,7 @@ void scrollTextIn7Seg(bool isLeftToRight) {
     }
   }
 
-  if (currentCharIndex + 1 <= 3 || currentCharIndex + 1 > WORD_LENGTH + 3) {
+  if (currentCharIndex + 1 <= numOfWhiteSpacesOnSide || currentCharIndex + 1 > WORD_LENGTH + numOfWhiteSpacesOnSide) {
     int indicesToOff[] = {1};    
     clear7Seg(indicesToOff, 1);
   }
@@ -126,7 +133,9 @@ void scrollTextIn7Seg(bool isLeftToRight) {
 }
 
 
-  // TODO
+  // TODO: BYE FOR RIGHT TO LEFT
+  // CHANGE HELLO TO BE FROM LEFT TO RIGHT
+  // USE LOOPS INSTEAD OF MANUAL WIRINTG
 
 
 

@@ -63,7 +63,7 @@ void loop() {
 
   if (isLDR1On == isLDR2On) {
     turnAll7SegToZeroes();
-    Serial.println("00");
+    // Serial.println("00");
   }
   else if (isLDR1On) {
     scrollTextIn7Seg(HELLO_TO_7SEG, HELLO_LENGTH, true);
@@ -102,9 +102,14 @@ void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], int wordLength,
   int helloIndex = currentCharIndex - numOfWhiteSpacesOnSide - 1;
   int i, j, isCurrSegHigh;
 
-  if( currentCharIndex >= wordLength + (numOfWhiteSpacesOnSide * 2)) {
-    currentCharIndex = 0;
+  int charactersSize = wordLength + (numOfWhiteSpacesOnSide * 2);
+  if (currentCharIndex < 0) {
+      currentCharIndex = charactersSize - 1;
   }
+  if (currentCharIndex >= charactersSize) {
+      currentCharIndex = 0;
+  }
+
 
   for (i = 0; i < NUM_OF_7SEGS; i++) {
     if (currentCharIndex + i <= numOfWhiteSpacesOnSide 
@@ -122,12 +127,15 @@ void scrollTextIn7Seg(const byte wordPinMaps[][NUM_OF_SEGMENTS], int wordLength,
       }      
     }
   }
+
   currentCharIndex++;
+  if (isLeftToRight) {
+    currentCharIndex -= 2;
+  }
+  Serial.println(currentCharIndex);
 }
 
 
-  // TODO: BYE FOR RIGHT TO LEFT
-  // CHANGE HELLO TO BE FROM LEFT TO RIGHT
   // RESET INDEX WHEN CHANGING STATE
 
 

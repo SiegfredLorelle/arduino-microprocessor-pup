@@ -1,11 +1,12 @@
-const int NUM_OF_DIGITS = 10;
+const int WORD_LENGTH = 5; // Because 'hello' contains 5 characters
 const int NUM_OF_SEGMENTS = 7;
+int numOf7Segments;
 
 // Pins
 // {a, b, c ,d ,e ,f, g} of 7 segments
 const byte SEVEN_SEG_PINS[][NUM_OF_SEGMENTS] = {
-  {A4, A3, 2, 3, 4, 5, 6},      // 7 segment display 1
-  {7, 8, 9, 10, 11, 12, 13},  // 7 segment display 2
+  {7, 8, 9, 10, 11, 12, 13},  // 7 segment display 1
+  {A4, A3, 2, 3, 4, 5, 6},      // 7 segment display 2
                               // Add more pins to display more characters
                               // ...
 };
@@ -14,29 +15,28 @@ const byte LDR2 = A1;
 
 // '0' mapping of 7 segment
 const byte ZERO_TO_7SEG[NUM_OF_SEGMENTS] = {
-  LOW, LOW, LOW, LOW, LOW, LOW, HIGH  // 0
+  HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW  // 0
 };
-const byte HELLO_TO_7SEG[NUM_OF_DIGITS][NUM_OF_SEGMENTS] = {
-  {LOW, HIGH, HIGH, LOW, HIGH, HIGH, LOW},  // H
-  {HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH},  // E
-  {LOW, HIGH, HIGH, HIGH, LOW, LOW, LOW},  // L
-  {LOW, HIGH, HIGH, HIGH, LOW, LOW, LOW},  // L
-  {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW},  // O
-
+const byte HELLO_TO_7SEG[WORD_LENGTH][NUM_OF_SEGMENTS] = {
+  {LOW, HIGH, HIGH, LOW, HIGH, HIGH, HIGH},   // H
+  {HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH},   // E
+  {LOW, LOW, LOW, HIGH, HIGH, HIGH, LOW},     // L
+  {LOW, LOW, LOW, HIGH, HIGH, HIGH, LOW},     // L
+  {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW}   // O
 };
 
 // Set to true if 7 segment displays used are common cathode
 const bool IS_CATHODE = false;
 // Feel free to adjust delay duration
-const int DELAY_DURATION = 325;
+const int DELAY_DURATION = 500;
 
 bool isSwitchOn;
-int currentIndex;
+int currentCharIndex = 0;
 
 void setup() {
   Serial.begin(9600);
   // Assign mode for all pins 
-  int numOf7Segments = sizeof(SEVEN_SEG_PINS) / sizeof(int);
+  numOf7Segments = sizeof(SEVEN_SEG_PINS) / sizeof(int);
   for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
     for (int j = 0; j <= numOf7Segments; j++) {
       pinMode(SEVEN_SEG_PINS[j][i], OUTPUT);
@@ -46,7 +46,9 @@ void setup() {
   pinMode(LDR2, INPUT_PULLUP);
   
   // Start will no lit LED
-  clearAllLEDs();
+  int indicesToZero[] = {0, 1};
+  int size = sizeof(indicesToZero) / sizeof(int);
+  clear7Seg(indicesToZero, 2);
 }
 
 void loop() {
@@ -57,7 +59,7 @@ void loop() {
 
   // Serial.println(isLDR1On);
   if (isLDR1On == isLDR2On) {
-    turn7SegToZeroes();
+    turnAll7SegToZeroes();
     Serial.println("00");
     Serial.println("00");
   }
@@ -74,27 +76,57 @@ void loop() {
   delay(DELAY_DURATION);
 }
 
-void clearAllLEDs() {
+void clear7Seg(int SevenSegIndices[], int size) {
   /* Turn off all LEDS */
-  for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
+  for (int i = 0; i < size; i++) {
     for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-      digitalWrite(SEVEN_SEG_PINS[i][j], getPolarity(IS_CATHODE));
+      digitalWrite(SEVEN_SEG_PINS[SevenSegIndices[i]][j], getPolarity(IS_CATHODE));
     }
   }
 }
 
-void turn7SegToZeroes() {
-  for (int i = 0; i < NUM_OF_SEGMENTS; i++) {
+void turnAll7SegToZeroes() {
+  for (int i = 0; i < numOf7Segments; i++) {
     for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
-      digitalWrite(SEVEN_SEG_PINS[i][j], ZERO_TO_7SEG[j]);
+      digitalWrite(SEVEN_SEG_PINS[i][j], getPolarity(ZERO_TO_7SEG[j]));
     }
   }
 }
 
 void scrollTextIn7Seg(bool isLeftToRight) {
-  clearAllLEDs();
-  // TODO
+  int helloIndex = currentCharIndex -  4;
+  if( currentCharIndex >= WORD_LENGTH * 2) {
+    currentCharIndex = 0;
+  }
+  if (currentCharIndex <= 3 || currentCharIndex > WORD_LENGTH + 3) {
+    int indicesToOff[] = {0};    
+    clear7Seg(indicesToOff, 1);
+  }
+  else {
+    for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
+        bool isCurrSeg1High = getPolarity(HELLO_TO_7SEG[helloIndex][j]);
+        digitalWrite(SEVEN_SEG_PINS[0][j], isCurrSeg1High);
+    }
+  }
+
+  if (currentCharIndex + 1 <= 3 || currentCharIndex + 1 > WORD_LENGTH + 3) {
+    int indicesToOff[] = {1};    
+    clear7Seg(indicesToOff, 1);
+  }
+  else {
+
+      helloIndex += 1;
+      for (int j = 0; j < NUM_OF_SEGMENTS; j++) {
+        bool isCurrSeg2High = getPolarity(HELLO_TO_7SEG[helloIndex][j]);
+        digitalWrite(SEVEN_SEG_PINS[1][j], isCurrSeg2High);
+      }
+    }
+
+  currentCharIndex++;
 }
+
+
+  // TODO
 
 
 

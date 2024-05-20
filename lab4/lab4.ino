@@ -32,7 +32,37 @@ void setup() {
 
 void loop() {
   char pressedKey = KEYPAD.getKey(); 
-  if (pressedKey) {
-  	Serial.println(pressedKey);
+  if (pressedKey == "1") {
+  	Serial.println("PRESSED 1");
+  }
+  else if (pressedKey == "2") {
+  	Serial.println("PRESSED 2");
+  }
+  else if (pressedKey == "3") {
+  	Serial.println("PRESSED 3");
+  }
+  else if (pressedKey == "4") {
+  	Serial.println("PRESSED 4");
+  }
+  else if (pressedKey == "5") {
+  	Serial.println("PRESSED 5");
+  }
+  else if (pressedKey == "6") {
+  	Serial.println("PRESSED 6");
+  }
+  else if (pressedKey == "7") {
+  	Serial.println("PRESSED 7");
+  }
+  else if (pressedKey == "8") {
+  	Serial.println("PRESSED 8");
+  }
+  else if (pressedKey == "9") {
+  	Serial.println("PRESSED 9");
+  }
+  else if (pressedKey == "*") {
+  	Serial.println("PRESSED *");
+  }
+  else if (pressedKey == "#") {
+  	Serial.println("PRESSED #");
   }
 }

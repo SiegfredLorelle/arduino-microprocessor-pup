@@ -4,7 +4,7 @@ const int NUM_ROWS = 4;
 const int NUM_COLS = 3;
 
 char keypadMapping[NUM_ROWS][NUM_COLS] = {
-  {'0', '2', '3'},
+  {'1', '2', '3'},
   {'4', '5', '6'},
   {'7', '8', '9'},
   {'*', '0', '#'}
@@ -32,37 +32,42 @@ void setup() {
 
 void loop() {
   char pressedKey = KEYPAD.getKey(); 
-  if (pressedKey == "1") {
+  // Serial.println(pressedKey);
+  if (pressedKey == '1') {
   	Serial.println("PRESSED 1");
   }
-  else if (pressedKey == "2") {
+  else if (pressedKey == '2') {
   	Serial.println("PRESSED 2");
   }
-  else if (pressedKey == "3") {
+  else if (pressedKey == '3') {
   	Serial.println("PRESSED 3");
   }
-  else if (pressedKey == "4") {
+  else if (pressedKey == '4') {
   	Serial.println("PRESSED 4");
   }
-  else if (pressedKey == "5") {
+  else if (pressedKey == '5') {
   	Serial.println("PRESSED 5");
   }
-  else if (pressedKey == "6") {
+  else if (pressedKey == '6') {
   	Serial.println("PRESSED 6");
   }
-  else if (pressedKey == "7") {
+  else if (pressedKey == '7') {
   	Serial.println("PRESSED 7");
   }
-  else if (pressedKey == "8") {
+  else if (pressedKey == '8') {
   	Serial.println("PRESSED 8");
   }
-  else if (pressedKey == "9") {
+  else if (pressedKey == '9') {
   	Serial.println("PRESSED 9");
   }
-  else if (pressedKey == "*") {
+  else if (pressedKey == '0') {
+  	Serial.println("PRESSED 9");
+  }
+  else if (pressedKey == '*') {
   	Serial.println("PRESSED *");
   }
-  else if (pressedKey == "#") {
+  else if (pressedKey == '#') {
   	Serial.println("PRESSED #");
   }
 }
+

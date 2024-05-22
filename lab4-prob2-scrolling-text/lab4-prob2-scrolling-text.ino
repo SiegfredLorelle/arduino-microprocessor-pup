@@ -35,7 +35,7 @@ const byte BYE_TO_7SEG[][NUM_OF_SEGMENT_PER_DISPLAY] = {
 // Set to true if 7 segment displays used are common cathode
 const bool IS_CATHODE = false;
 // Feel free to adjust delay duration
-const int DELAY_DURATION = 225;
+const int DELAY_DURATION = 500;
 
 int currCharIndex = 0;
 int prevState = 0;

@@ -1,3 +1,5 @@
+# include <Keypad.h>
+
 const int NUM_OF_DIGITS = 10;
 const int NUM_OF_SEGMENTS = 7;
 
@@ -35,7 +37,7 @@ const byte ERROR_7SEG[NUM_OF_SEGMENTS] = {
 // Set to true if 7 segment displays used are common cathode
 const bool IS_CATHODE = false;
 // Feel free to adjust delay duration
-const int DELAY_DURATION = 325;
+const int DELAY_DURATION = 500;
 
 int maxDigits;
 int numOf7Segments;

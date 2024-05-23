@@ -1,21 +1,27 @@
 #include <Keypad.h>
 
 // Constants
-const byte ROWS = 4; // Four rows
-const byte COLS = 3; // Three columns
+const byte rows = 4;
+const byte cols = 3;
 
 // Keypad setup
-char keys[ROWS][COLS] = {
+char keys[rows][cols] = {
   {'1','2','3'},
   {'4','5','6'},
   {'7','8','9'},
   {'*','0','#'}
 };
 
-byte rowPins[ROWS] = {13, 12, 11, 10}; // Connect to the row pinouts of the keypad
-byte colPins[COLS] = {9, 8, 7};    // Connect to the column pinouts of the keypad
+byte rowPins[rows] = {13, 12, 11, 10};
+byte colPins[cols] = {9, 8, 7}; 
 
-Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+Keypad keypad = Keypad(
+  makeKeymap(keys), 
+  rowPins, 
+  colPins, 
+  rows, 
+  cols
+);
 
 // LED pins
 const byte ledPins[] = {3, 2, A0, A1, A2, A3, A4, A5};
@@ -62,41 +68,19 @@ void displayMenu() {
   Serial.println("7. Light up 8LED from left to right for 3s");
   Serial.println("8. Blink 4LED from the left, then blink 4LED from the right");
   Serial.println("9. Display an error, then blink all LED for 2 seconds");
-  Serial.println("0. Display INVALID CODE!!!");
+  Serial.println("0. Display INVALID CODE!!! \n");
 }
 
 void pyramidOfStars() {
-  int numAsterisks;
-  char inputBuffer[10]; // Buffer to store user input
 
-  // Prompt user for input until a valid numeric value is entered
-  while (true) {
-    Serial.println("Enter the number of asterisks for the pyramid: ");
-    while (!Serial.available()); // Wait for user input
-    int bytesRead = Serial.readBytesUntil('\n', inputBuffer, sizeof(inputBuffer) - 1);
-    inputBuffer[bytesRead] = '\0'; // Null-terminate the string
+    int heightOfPyramid = getInt("Enter the number of asterisks for the pyramid: ");
+    Serial.println(heightOfPyramid);
 
-    // Check if input contains only digits
-    bool validInput = true;
-    for (int i = 0; i < bytesRead; ++i) {
-      if (!isdigit(inputBuffer[i])) {
-        validInput = false;
-        break;
-      }
-    }
-
-    if (validInput) {
-      numAsterisks = atoi(inputBuffer); // Convert input to integer
-      break; // Valid input, exit the loop
-    } else {
-      Serial.println("Invalid input. Please enter a valid number.");
-    }
-  }
 
   // Print the centered pyramid
-  for (int i = 1; i <= numAsterisks; ++i) {
+  for (int i = 1; i <= heightOfPyramid; ++i) {
     // Print spaces (centered)
-    for (int j = 1; j <= numAsterisks - i; ++j) {
+    for (int j = 1; j <= heightOfPyramid - i; ++j) {
       Serial.print(" ");
     }
     // Print asterisks
@@ -108,7 +92,7 @@ void pyramidOfStars() {
 }
 
 void drawSquare() {
-  int side = getInt("Enter side length for square:", false);
+  int side = getInt("Enter side length for square:");
   Serial.println(side);
 
   for (int i = 0; i < side; i++) Serial.print("*");
@@ -123,7 +107,7 @@ void drawSquare() {
 }
 
 void fibonacciSeries() {
-  int n = getInt("Enter the number of Fibonacci terms:", false);
+  int n = getInt("Enter the number of Fibonacci terms:");
   Serial.println(n);
 
   long a = 0, b = 1, next;
@@ -139,7 +123,7 @@ void fibonacciSeries() {
 }
 
 void multiplicationTable() {
-  int num = getInt("Enter number for multiplication table: ", true);
+  int num = getInt("Enter number for multiplication table: ");
   Serial.println(num);
 
   if (num > 10) {
@@ -272,6 +256,7 @@ void askToTryAgain() {
 }
 
 float getFloat(char* message) {
+  clearSerialBuffer();
   while (true) {
     // Prompt for the an input
     Serial.print(message);
@@ -323,7 +308,8 @@ float getFloat(char* message) {
   }
 }
 
-int getInt(char* message, bool isNegativeAllowed) {
+int getInt(char* message) {
+  clearSerialBuffer();
   while (true) {
     // Prompt for the an input
     Serial.print(message);
@@ -339,12 +325,12 @@ int getInt(char* message, bool isNegativeAllowed) {
     }
 
     // Ensures input is not a negative number
-    if (input[0] == '-' && !isNegativeAllowed) {
+    if (input[0] == '-') {
       Serial.println("ERROR: Cannot be negative.");
       continue;
     }
 
-    // Ensures input has no non digits and has at most 1 decimal point
+    // Ensures input has no non digits
     bool hasNonDigit = false;
     for (int i = 0; i < input.length(); i++) {
       if (!isDigit(input[i])) {
@@ -358,8 +344,13 @@ int getInt(char* message, bool isNegativeAllowed) {
       continue;
     }
 
-    int validInt = input.toFloat();
-    if (validInt < 0) continue;
+    int validInt = input.toInt();
     return validInt;
+  }
+}
+
+void clearSerialBuffer() {
+  while (Serial.available() > 0) {
+    Serial.read();
   }
 }

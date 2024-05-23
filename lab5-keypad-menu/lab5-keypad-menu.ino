@@ -73,19 +73,19 @@ void displayMenu() {
 
 void pyramidOfStars() {
 
-    int heightOfPyramid = getInt("Enter the number of asterisks for the pyramid: ");
+    int heightOfPyramid = getInt("Enter the height of asterisks for the pyramid: ");
     Serial.println(heightOfPyramid);
 
 
   // Print the centered pyramid
-  for (int i = 1; i <= heightOfPyramid; ++i) {
+  for (int i = 0; i < heightOfPyramid; i++) {
     // Print spaces (centered)
-    for (int j = 1; j <= heightOfPyramid - i; ++j) {
+    for (int j = 1; j < heightOfPyramid - i; j++) {
       Serial.print(" ");
     }
     // Print asterisks
-    for (int j = 0; j <= i +  - 1; ++j) {
-      Serial.print(" *");
+    for (int j = 0; j <  i + 1; j++) {
+      Serial.print("* ");
     }
     Serial.println(); // Move to the next line
   }
@@ -237,6 +237,8 @@ void invalidCode() {
 }
 
 void askToTryAgain() {
+    Serial.println();
+
   while (true) {
     Serial.println("press Y to try again; press N to exit: ");
     while (!Serial.available()) {

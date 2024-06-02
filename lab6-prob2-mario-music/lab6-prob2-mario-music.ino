@@ -88,29 +88,51 @@ int overworldNotes[] = {
 
   NOTE_B4, NOTE_DS5, NOTE_G5, NOTE_B5, REST, 
   
-  NOTE_A5,  NOTE_A5, NOTE_A5, REST,
+  NOTE_A5, NOTE_A5, REST,
 
-  NOTE_G5, REST, NOTE_AS4, NOTE_D5, REST, NOTE_G5, NOTE_G5, NOTE_G5, NOTE_AS4, NOTE_D5, REST, NOTE_G5,
-  NOTE_CS5, NOTE_E5, NOTE_G5, NOTE_B5, REST, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_B5,
-  NOTE_C6, REST, NOTE_B5, NOTE_C6, REST, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_C6, NOTE_B5, REST, NOTE_A5,
-  NOTE_G5, REST, NOTE_FS5, NOTE_G5, REST, NOTE_E5, NOTE_E5, NOTE_E5, NOTE_CS5, NOTE_D5, REST, NOTE_E5,
-  NOTE_F5, REST, NOTE_E5, NOTE_F5, REST, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_E5, NOTE_D5, REST, NOTE_C4,
-  NOTE_C4, NOTE_C4, NOTE_C4, NOTE_C4, NOTE_C4, REST, REST, REST, REST, REST, REST, REST,
+  NOTE_G5, REST, NOTE_AS4, NOTE_D5, REST, NOTE_G5, 
+  NOTE_G5, NOTE_AS4, NOTE_D5, REST, NOTE_G5,
+  
+  NOTE_CS5, NOTE_E5, NOTE_G5, NOTE_B5, REST, 
+  
+  NOTE_A5, NOTE_A5, NOTE_A5,
+
+  NOTE_C6, REST, NOTE_B5, NOTE_C6, REST, NOTE_A5, 
+  NOTE_A5, NOTE_C6, NOTE_B5, REST, NOTE_A5,
+
+  NOTE_G5, REST, NOTE_FS5, NOTE_G5, REST, NOTE_E5, 
+  NOTE_E5, NOTE_CS5, NOTE_D5, REST, 
+
+  NOTE_E5, NOTE_F5, REST, NOTE_E5, NOTE_F5, REST, 
+  
+  NOTE_B4, NOTE_B4, NOTE_E5, NOTE_D5, REST, 
+  NOTE_C4, NOTE_C4, NOTE_C4, REST,
 };
 int overworldTempos[] = {
-  8, 8, 8, 8, 8, 8, 
-  4, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 4, 
+  8, 8, 8, 8, 8, 
 
   8, 8, 8, 8, 8, 
 
-  4, 4, 4, 8,
+  2, 4, 8,
 
-  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 4,
+  8, 8, 8, 8, 8,
+
+  8, 8, 8, 8, 8, 
+
+  2, 4, 8,
+
+  8, 8, 8, 8, 8, 4, 
+  8, 8, 8, 8, 8,
+
+  8, 8, 8, 8, 8, 4, 
+  8, 8, 8, 8, 
+
+  8, 8, 8, 8, 8, 8, 
+
+  4, 8, 8, 8, 8, 
+  4, 4, 4, 8, 
 };
 int overworldBaseTempo = 300;
 int overworldSize = sizeof(overworldNotes) / sizeof(overworldNotes[0]);
@@ -248,22 +270,13 @@ int mario2_ending_tempo[] = {
 };
 
 void playMelody(int notes[], int tempos[], int baseTempo, int size) {
-  // int noteDuration, pauseBetweenNotes;
   for (int i = 0; i < size; i++) {
-  //   noteDuration = 1000 / tempo[i];
-  //   tone(buzzer, notes[i], noteDuration);
-  //   pauseBetweenNotes = noteDuration * 1.30;
-  //   delay(pauseBetweenNotes);
-  // }
-  // noTone(buzzer);
-  // delay(1000);
-
-  // int baseTempo = 198;
-  int noteDuration = (60000 * 4 / baseTempo) / tempos[i]; // Calculate duration in milliseconds
+  int noteDuration = (60000 * 4 / baseTempo) / tempos[i];
   tone(buzzer, notes[i], noteDuration);
-  delay(noteDuration * 1.05); // Add a slight pause between notes
+  delay(noteDuration);
   noTone(buzzer);
   }
+  delay(1000);
 }
 
 void setup() {
@@ -275,25 +288,14 @@ void setup() {
   Serial.println("Playing Underworld Theme ...");
   playMelody(underworldNotes, underworldTempos, underworldBaseTempo, underworldSize);
   // Play Super Mario Bros 2 - Overworld Theme
-  Serial.println("Playing Underworld Theme ...");
+  Serial.println("Playing Overworld Theme ...");
   playMelody(overworldNotes, overworldTempos, overworldBaseTempo, overworldSize);
 
 
 
-  // Play Overworld Theme 2 melody for 20 seconds
-  // Serial.println("Playing Overworld Theme ...");
-  // playMelody(star_melody, star_tempo, sizeof(star_melody) / sizeof(int));
-  // // Play Super Mario 2 NES Ending Theme for 20 seconds
-  // Serial.println("Playing Super Mario 2 NES Ending Theme ...");
-  // playMelody(mario2_ending_melody, mario2_ending_tempo, sizeof(mario2_ending_melody) / sizeof(int));
+
   Serial.println("DONE PLAYING");
 }
 
 void loop() {
-  // int baseTempo = 200;
-  // int noteDuration = (60000 * 4 / baseTempo[i]) / underworld_tempo[i]; // Calculate duration in milliseconds
-  // tone(speakerPin, underworld_melody, noteDuration);
-  // delay(noteDuration * 1.1); // Add a slight pause between notes
-  // noTone(buzzer);
 }
-// }

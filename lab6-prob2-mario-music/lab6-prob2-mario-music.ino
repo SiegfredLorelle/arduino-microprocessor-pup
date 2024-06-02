@@ -219,39 +219,51 @@ int underwaterSize = sizeof(underwaterNotes) / sizeof(underwaterNotes[0]);
 
 
 
-// Super Mario World - Overworld Theme Music
+// Super Mario Party OST - Main Theme
 int partyOSTNotes[] = {
-  NOTE_A4, NOTE_F4,
-  NOTE_C4, NOTE_D4, 
-  NOTE_F4, NOTE_F4,
-  NOTE_D4, NOTE_C4,
-  NOTE_F4, NOTE_F4, NOTE_C5,
-  NOTE_A4, NOTE_A4, NOTE_G4, NOTE_G4,
-  REST, NOTE_C4, NOTE_A4,
-  NOTE_F4, NOTE_F4, NOTE_C4, NOTE_D4,
-  NOTE_F4, NOTE_F4, NOTE_D4,
-  NOTE_C4, NOTE_F4, 
-  NOTE_AS4, NOTE_A4, NOTE_G4,
-  NOTE_F4, REST,
+  NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_GS4, NOTE_A4, 
+  NOTE_E5, NOTE_D5, NOTE_A4,
+  NOTE_CS5, NOTE_D5, NOTE_A4,
+  NOTE_A4, REST, REST,
+  NOTE_A4, NOTE_GS4, NOTE_A4,
+  NOTE_E5, NOTE_D5, NOTE_A4,
+  NOTE_CS5, NOTE_D5, NOTE_FS5,
+  NOTE_FS5, NOTE_G5, NOTE_FS5,
+  NOTE_E5, REST,
+  NOTE_A4, NOTE_GS4, NOTE_A4,
+  NOTE_E5, NOTE_D5, NOTE_A5, NOTE_CS5, NOTE_D5,
+  NOTE_A4, NOTE_B4, NOTE_D5,
+  NOTE_E5, NOTE_A5, NOTE_FS5, NOTE_D5, NOTE_A4,
+  NOTE_FS5, NOTE_FS5, NOTE_G5,
+  NOTE_FS5, NOTE_D5, NOTE_E5,
+  NOTE_D5, NOTE_D5, REST,
 };
+
 int partyOSTTempos[] = {
-  2, 2,
-  8, 8,
-  4, 2,
-  8, 4,
+  16, 16, 16, 16, 16,
+  8, 8, 16,
+  4, 4, 2,
+  4, 8, 4,
+  16, 16, 16,
+  8, 8, 16,
   4, 4, 4,
-  4, 8, 8, 4,
-  8, 8, 2,
-  4, 8, 8, 8,
-  4, 2, 8,
-  4, 4,
-  8, 8, 8, 
-  2, 2,
+  8, 8, 8,
+  4, 8,
+  16, 16, 16,
+  8, 8, 16, 4, 4,
+  4, 4, 4,
+  4, 8, 16, 16, 8,
+  16, 8, 8,
+  16, 16, 16,
+  17, 2, 8
 };
-int partyOSTBaseTempo = 240;
+int partyOSTBaseTempo = 126;
 int partyOSTSize = sizeof(partyOSTNotes) / sizeof(partyOSTNotes[0]);
 
-// Super Mario Party OST - Main Theme
+
+
+
+// Super Mario World - Overworld Theme Music
 int worldOverworldNotes[] = {
   NOTE_A4, NOTE_F4,
   NOTE_C4, NOTE_D4, 
@@ -300,6 +312,8 @@ void setup() {
   // Declare buzzer pin as output
   pinMode(buzzer, OUTPUT);
 
+  Serial.println("Playing Super Mario Party OST - Main Theme ...");
+  playMelody(partyOSTNotes, partyOSTTempos, partyOSTBaseTempo, partyOSTSize);
   Serial.println("Playing Super Mario World - Overworld Theme Music ...");
   playMelody(worldOverworldNotes, worldOverworldTempos, worldOverworldBaseTempo, worldOverworldSize);
   Serial.println("Playing Super Mario Bros 2 (NES) Music - Overworld Theme ...");

@@ -41,7 +41,7 @@
 int buzzer = 10;
 
 // Super Mario Bros - Underground Theme
-int underworldNotes[] = {
+int undergroundNotes[] = {
   NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4, NOTE_AS3, NOTE_AS4,
   REST, REST, REST,
   NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4, NOTE_AS3, NOTE_AS4,
@@ -59,7 +59,7 @@ int underworldNotes[] = {
   NOTE_C4, NOTE_FS4, NOTE_F4, NOTE_E4, NOTE_AS4, NOTE_A4, NOTE_GS4, NOTE_DS4,
   REST, NOTE_B3, REST, NOTE_AS3, NOTE_A3, REST, NOTE_GS3, REST,
 };
-int underworldTempos[] = {
+int undergroundTempos[] = {
   8, 8, 8, 8, 8, 8,
   4, 4, 4,
   8, 8, 8, 8, 8, 8,
@@ -77,11 +77,11 @@ int underworldTempos[] = {
   16, 16, 8, 16, 16, 8, 8, 8,
   16, 8, 16, 8, 8, 16, 8, 16,
 };
-int underworldBaseTempo = 198;
-int underworldSize = sizeof(underworldNotes) / sizeof(underworldNotes[0]);
+int undergroundBaseTempo = 198;
+int undergroundSize = sizeof(undergroundNotes) / sizeof(undergroundNotes[0]);
 
 
-// Super Mario Bros 2 - Overworld Theme
+// Super Mario Bros 2 (NES) Music - Overworld Theme
 int overworldNotes[] = {
   NOTE_G5, REST, NOTE_C5, NOTE_E5, REST, NOTE_G5, 
   NOTE_G5, NOTE_C5, NOTE_E5, REST, NOTE_G5,
@@ -144,7 +144,7 @@ int endingNotes[] = {
   NOTE_D5, REST, NOTE_C5,
   NOTE_E4, NOTE_FS4, NOTE_E4,
   NOTE_E4, NOTE_E4, REST, NOTE_C4,
-  NOTE_FS4, NOTE_G4, NOTE_G4, REST,
+  NOTE_FS4, NOTE_G4, NOTE_G4, REST
 };
 int endingTempos[] = {
   4, 8, 8, 4,
@@ -152,12 +152,66 @@ int endingTempos[] = {
   4, 8, 4,
   12, 12, 12,
   4, 8, 8, 4,
-  4, 4, 8, 8,
-
-
+  4, 4, 8, 8
 };
 int endingBaseTempo = 154;
 int endingSize = sizeof(endingNotes) / sizeof(endingNotes[0]);
+
+// Super Mario Bros (NES) Music - Underwater Theme
+int underwaterNotes[] = {
+  NOTE_D4, NOTE_E4, NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_AS4,
+  NOTE_B4, NOTE_B4, NOTE_B4, REST, NOTE_B4, REST,
+  NOTE_B4, NOTE_G4, NOTE_E5, REST,
+  NOTE_DS5, REST, NOTE_E5, REST,
+  REST, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_C5, NOTE_D5,
+  NOTE_E5, REST, NOTE_DS5, NOTE_F5,
+  NOTE_E5, REST, REST, REST, NOTE_G4,
+  NOTE_D5, REST, NOTE_CS5, REST,
+  NOTE_D5, REST,
+  REST, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_C5, NOTE_CS5,
+  NOTE_D5, REST, NOTE_G4, NOTE_F5,
+  NOTE_E5, REST, REST, REST, NOTE_G4,
+  NOTE_G5, NOTE_G5, REST,
+  NOTE_G5, NOTE_G5, REST,
+  NOTE_G5, NOTE_G5, REST,
+  NOTE_G5, NOTE_A5, REST, NOTE_G5,
+  NOTE_F5, NOTE_F5, REST,
+  NOTE_F5, NOTE_F5, REST,
+  NOTE_F5, NOTE_F5, REST,
+  NOTE_F5, NOTE_G5, REST, NOTE_F5,
+  NOTE_E5, NOTE_E5, REST,
+  NOTE_A4, NOTE_B4, NOTE_F5,
+  NOTE_E5, NOTE_E5, NOTE_E5, NOTE_E5, NOTE_B4,
+  NOTE_C5, NOTE_C5, REST
+};
+int underwaterTempos[] = {
+  4, 4, 4, 4, 4, 4,
+  8, 8, 8, 8, 8, 8,
+  2, 4, 2, 4,
+  2, 4, 2, 4,
+  8, 8, 8, 8, 8, 8,
+  2, 4, 2, 4,
+  2, 4, 2, 8, 8,
+  2, 4, 2, 4,
+  2, 4,
+  8, 8, 8, 8, 8, 8,
+  2, 4, 2, 4,
+  2, 4, 2, 8, 8,
+  2, 8, 8,
+  2, 8, 8,
+  2, 8, 8,
+  4, 4, 8, 8,
+  2, 8, 8,
+  2, 8, 8,
+  2, 8, 8,
+  4, 4, 8, 8,
+  2, 8, 8,
+  4, 4, 4,
+  8, 8, 4, 8, 8,
+  2, 4, 4,
+};
+int underwaterBaseTempo = 227;
+int underwaterSize = sizeof(underwaterNotes) / sizeof(underwaterNotes[0]);
 
 
 
@@ -166,7 +220,7 @@ void playMelody(int notes[], int tempos[], int baseTempo, int size, int repeat=1
     for (int i = 0; i < size; i++) {
     int noteDuration = (60000 * 4 / baseTempo) / tempos[i];
     tone(buzzer, notes[i], noteDuration);
-    delay(noteDuration);
+    delay(noteDuration * 1.025);
     noTone(buzzer);
     }
   }
@@ -178,18 +232,14 @@ void setup() {
   // Declare buzzer pin as output
   pinMode(buzzer, OUTPUT);
 
-  // Play Super Mario Bros - Underground Theme
-  Serial.println("Playing Underworld Theme ...");
-  playMelody(underworldNotes, underworldTempos, underworldBaseTempo, underworldSize);
-  // Play Super Mario Bros 2 - Overworld Theme
-  Serial.println("Playing Overworld Theme ...");
+  Serial.println("Playing Super Mario Bros 2 (NES) Music - Overworld Theme ...");
   playMelody(overworldNotes, overworldTempos, overworldBaseTempo, overworldSize);
-  // Play Super Mario Bros 2 (NES) Music - Ending Theme
-  Serial.println("Playing Ending Theme ...");
-  playMelody(endingNotes, endingTempos, endingBaseTempo, endingSize, 3);
-
-
-
+  Serial.println("Playing Super Mario Bros 2 (NES) Music - Ending Theme ...");
+  playMelody(undergroundNotes, undergroundTempos, undergroundBaseTempo, undergroundSize);
+  Serial.println("Playing Super Mario Bros - Underground Theme ...");
+  playMelody(endingNotes, endingTempos, endingBaseTempo, endingSize, 2);
+  Serial.println("Playing Super Mario Bros (NES) Music - Underwater Theme ...");
+  playMelody(underwaterNotes, underwaterTempos, underwaterBaseTempo, underwaterSize);
   Serial.println("DONE PLAYING");
 }
 

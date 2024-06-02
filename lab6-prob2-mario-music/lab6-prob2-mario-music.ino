@@ -137,144 +137,38 @@ int overworldTempos[] = {
 int overworldBaseTempo = 300;
 int overworldSize = sizeof(overworldNotes) / sizeof(overworldNotes[0]);
 
-// Mario Star Theme 2 melody
-int star_melody[] = {
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
-  NOTE_D5,
-  NOTE_F5,
-  NOTE_F5,
+// Super Mario Bros (NES) Music - Ending Theme
+int endingNotes[] = {
+  NOTE_C5, NOTE_E5, NOTE_E5, NOTE_D5,
+  NOTE_E5, NOTE_F5, NOTE_A4,
+  NOTE_D5, REST, NOTE_C5,
+  NOTE_E4, NOTE_FS4, NOTE_E4,
+  NOTE_E4, NOTE_E4, REST, NOTE_C4,
+  NOTE_FS4, NOTE_G4, NOTE_G4, REST,
 };
-int star_tempo[] = {
-  4, 4, 4, 8, 4, 4, 8, 4, 4,
-  4, 4, 4, 8, 4, 4, 8, 4, 4,
-  4, 4, 4, 8, 4, 4, 8, 4, 4,
-  4, 4, 4, 8, 4, 4, 8, 4, 4,
-  4, 4, 4, 8, 4, 4, 8, 4, 4,
-  4, 4, 4, 8, 4, 4, 8, 4, 4,
-  4, 4, 4, 8, 4, 4, 8, 4, 4,
-  4, 4, 4, 8, 4, 4, 8, 4, 4
-};
+int endingTempos[] = {
+  4, 8, 8, 4,
+  4, 4, 4,
+  4, 8, 4,
+  12, 12, 12,
+  4, 8, 8, 4,
+  4, 4, 8, 8,
 
-// Super Mario 2 NES Ending Theme melody
-int mario2_ending_melody[] = {
-  NOTE_G4, NOTE_C5, NOTE_E5, NOTE_G5,
-  NOTE_E5, NOTE_G5, NOTE_A5, NOTE_B5,
-  NOTE_A5, NOTE_G5, NOTE_E5, NOTE_C5,
-  NOTE_D5, NOTE_E5, NOTE_F5, NOTE_G5,
-  NOTE_E5, NOTE_F5, NOTE_E5, NOTE_C5,
-  NOTE_E5, NOTE_G5, NOTE_B5, NOTE_C6,
-  NOTE_B5, NOTE_G5, NOTE_A5, NOTE_G5,
-  NOTE_E5, NOTE_C5, NOTE_D5, NOTE_E5,
-  NOTE_F5, NOTE_G5, NOTE_E5, NOTE_D5,
-  NOTE_C5, 0, NOTE_G4, 0,
-  NOTE_G4, NOTE_C5, NOTE_E5, NOTE_G5,
-  NOTE_E5, NOTE_G5, NOTE_A5, NOTE_B5,
-  NOTE_A5, NOTE_G5, NOTE_E5, NOTE_C5,
-  NOTE_D5, NOTE_E5, NOTE_F5, NOTE_G5,
-  NOTE_E5, NOTE_F5, NOTE_E5, NOTE_C5,
-  NOTE_E5, NOTE_G5, NOTE_B5, NOTE_C6,
-  NOTE_B5, NOTE_G5, NOTE_A5, NOTE_G5,
-  NOTE_E5, NOTE_C5, NOTE_D5, NOTE_E5,
-  NOTE_F5, NOTE_G5, NOTE_E5, NOTE_D5,
-  NOTE_C5, 0, NOTE_G4, 0
-};
-int mario2_ending_tempo[] = {
-  8, 8, 8, 8,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  1, 1, 2, 1,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  2, 2, 2, 2,
-  1, 1, 2, 1
-};
 
-void playMelody(int notes[], int tempos[], int baseTempo, int size) {
-  for (int i = 0; i < size; i++) {
-  int noteDuration = (60000 * 4 / baseTempo) / tempos[i];
-  tone(buzzer, notes[i], noteDuration);
-  delay(noteDuration);
-  noTone(buzzer);
+};
+int endingBaseTempo = 154;
+int endingSize = sizeof(endingNotes) / sizeof(endingNotes[0]);
+
+
+
+void playMelody(int notes[], int tempos[], int baseTempo, int size, int repeat=1) {
+  for (repeat; repeat > 0; repeat--) {
+    for (int i = 0; i < size; i++) {
+    int noteDuration = (60000 * 4 / baseTempo) / tempos[i];
+    tone(buzzer, notes[i], noteDuration);
+    delay(noteDuration);
+    noTone(buzzer);
+    }
   }
   delay(1000);
 }
@@ -290,7 +184,9 @@ void setup() {
   // Play Super Mario Bros 2 - Overworld Theme
   Serial.println("Playing Overworld Theme ...");
   playMelody(overworldNotes, overworldTempos, overworldBaseTempo, overworldSize);
-
+  // Play Super Mario Bros 2 (NES) Music - Ending Theme
+  Serial.println("Playing Ending Theme ...");
+  playMelody(endingNotes, endingTempos, endingBaseTempo, endingSize, 3);
 
 
 

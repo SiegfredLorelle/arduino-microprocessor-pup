@@ -36,11 +36,11 @@
 #define NOTE_AS5 932
 #define NOTE_B5 988
 #define NOTE_C6 1047
-#define NOTE_CS6 1109
 
 int buzzer = 10;
 
 // Super Mario Bros - Underground Theme
+// Notes from https://www.hooktheory.com/theorytab/view/koji-kondo/super-mario-bros---underground-theme
 int undergroundNotes[] = {
   NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4, NOTE_AS3, NOTE_AS4,
   REST, REST, REST,
@@ -82,6 +82,7 @@ int undergroundSize = sizeof(undergroundNotes) / sizeof(undergroundNotes[0]);
 
 
 // Super Mario Bros 2 (NES) Music - Overworld Theme
+// Notes from https://www.hooktheory.com/theorytab/view/koji-kondo/super-mario-bros-2---overworld-theme
 int bros2OverworldNotes[] = {
   NOTE_G5, REST, NOTE_C5, NOTE_E5, REST, NOTE_G5, 
   NOTE_G5, NOTE_C5, NOTE_E5, REST, NOTE_G5,
@@ -140,6 +141,7 @@ int bros2OverworldSize = sizeof(bros2OverworldNotes) / sizeof(bros2OverworldNote
 
 
 // Super Mario Bros (NES) Music - Ending Theme
+// Notes from https://www.hooktheory.com/theorytab/view/koji-kondo/ending---super-mario-bros
 int endingNotes[] = {
   NOTE_C5, NOTE_E5, NOTE_E5, NOTE_D5,
   NOTE_E5, NOTE_F5, NOTE_A4,
@@ -162,6 +164,7 @@ int endingSize = sizeof(endingNotes) / sizeof(endingNotes[0]);
 
 
 // Super Mario Bros (NES) Music - Underwater Theme
+// Notes from https://www.hooktheory.com/theorytab/view/koji-kondo/mario-brothers-water-theme
 int underwaterNotes[] = {
   NOTE_D4, NOTE_E4, NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_AS4,
   NOTE_B4, NOTE_B4, NOTE_B4, REST, NOTE_B4, REST,
@@ -220,6 +223,7 @@ int underwaterSize = sizeof(underwaterNotes) / sizeof(underwaterNotes[0]);
 
 
 // Super Mario Party OST - Main Theme
+// Notes from https://www.hooktheory.com/theorytab/view/nintendo/super-mario-party---title-theme
 int partyOSTNotes[] = {
   NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_GS4, NOTE_A4, 
   NOTE_E5, NOTE_D5, NOTE_A4,
@@ -264,6 +268,7 @@ int partyOSTSize = sizeof(partyOSTNotes) / sizeof(partyOSTNotes[0]);
 
 
 // Super Mario World - Overworld Theme Music
+// Note from https://www.hooktheory.com/theorytab/view/nintendo/super-mario-world---overworld-theme
 int worldOverworldNotes[] = {
   NOTE_A4, NOTE_F4,
   NOTE_C4, NOTE_D4, 
@@ -312,6 +317,7 @@ void setup() {
   // Declare buzzer pin as output
   pinMode(buzzer, OUTPUT);
 
+  Serial.println("Start playing");
   Serial.println("Playing Super Mario Party OST - Main Theme ...");
   playMelody(partyOSTNotes, partyOSTTempos, partyOSTBaseTempo, partyOSTSize);
   Serial.println("Playing Super Mario World - Overworld Theme Music ...");
@@ -324,7 +330,7 @@ void setup() {
   playMelody(endingNotes, endingTempos, endingBaseTempo, endingSize, 2);
   Serial.println("Playing Super Mario Bros (NES) Music - Underwater Theme ...");
   playMelody(underwaterNotes, underwaterTempos, underwaterBaseTempo, underwaterSize);
-  Serial.println("DONE PLAYING");
+  Serial.println("Finish playing");
 }
 
 void loop() {

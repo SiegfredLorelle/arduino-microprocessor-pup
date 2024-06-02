@@ -82,7 +82,7 @@ int undergroundSize = sizeof(undergroundNotes) / sizeof(undergroundNotes[0]);
 
 
 // Super Mario Bros 2 (NES) Music - Overworld Theme
-int overworldNotes[] = {
+int bros2OverworldNotes[] = {
   NOTE_G5, REST, NOTE_C5, NOTE_E5, REST, NOTE_G5, 
   NOTE_G5, NOTE_C5, NOTE_E5, REST, NOTE_G5,
 
@@ -108,7 +108,7 @@ int overworldNotes[] = {
   NOTE_B4, NOTE_B4, NOTE_E5, NOTE_D5, REST, 
   NOTE_C4, NOTE_C4, NOTE_C4, REST,
 };
-int overworldTempos[] = {
+int bros2OverworldTempos[] = {
   8, 8, 8, 8, 8, 4, 
   8, 8, 8, 8, 8, 
 
@@ -134,8 +134,10 @@ int overworldTempos[] = {
   4, 8, 8, 8, 8, 
   4, 4, 4, 8, 
 };
-int overworldBaseTempo = 300;
-int overworldSize = sizeof(overworldNotes) / sizeof(overworldNotes[0]);
+int bros2OverworldBaseTempo = 300;
+int bros2OverworldSize = sizeof(bros2OverworldNotes) / sizeof(bros2OverworldNotes[0]);
+
+
 
 // Super Mario Bros (NES) Music - Ending Theme
 int endingNotes[] = {
@@ -156,6 +158,8 @@ int endingTempos[] = {
 };
 int endingBaseTempo = 154;
 int endingSize = sizeof(endingNotes) / sizeof(endingNotes[0]);
+
+
 
 // Super Mario Bros (NES) Music - Underwater Theme
 int underwaterNotes[] = {
@@ -215,6 +219,70 @@ int underwaterSize = sizeof(underwaterNotes) / sizeof(underwaterNotes[0]);
 
 
 
+// Super Mario World - Overworld Theme Music
+int partyOSTNotes[] = {
+  NOTE_A4, NOTE_F4,
+  NOTE_C4, NOTE_D4, 
+  NOTE_F4, NOTE_F4,
+  NOTE_D4, NOTE_C4,
+  NOTE_F4, NOTE_F4, NOTE_C5,
+  NOTE_A4, NOTE_A4, NOTE_G4, NOTE_G4,
+  REST, NOTE_C4, NOTE_A4,
+  NOTE_F4, NOTE_F4, NOTE_C4, NOTE_D4,
+  NOTE_F4, NOTE_F4, NOTE_D4,
+  NOTE_C4, NOTE_F4, 
+  NOTE_AS4, NOTE_A4, NOTE_G4,
+  NOTE_F4, REST,
+};
+int partyOSTTempos[] = {
+  2, 2,
+  8, 8,
+  4, 2,
+  8, 4,
+  4, 4, 4,
+  4, 8, 8, 4,
+  8, 8, 2,
+  4, 8, 8, 8,
+  4, 2, 8,
+  4, 4,
+  8, 8, 8, 
+  2, 2,
+};
+int partyOSTBaseTempo = 240;
+int partyOSTSize = sizeof(partyOSTNotes) / sizeof(partyOSTNotes[0]);
+
+// Super Mario Party OST - Main Theme
+int worldOverworldNotes[] = {
+  NOTE_A4, NOTE_F4,
+  NOTE_C4, NOTE_D4, 
+  NOTE_F4, NOTE_F4,
+  NOTE_D4, NOTE_C4,
+  NOTE_F4, NOTE_F4, NOTE_C5,
+  NOTE_A4, NOTE_A4, NOTE_G4, NOTE_G4,
+  REST, NOTE_C4, NOTE_A4,
+  NOTE_F4, NOTE_F4, NOTE_C4, NOTE_D4,
+  NOTE_F4, NOTE_F4, NOTE_D4,
+  NOTE_C4, NOTE_F4, 
+  NOTE_AS4, NOTE_A4, NOTE_G4,
+  NOTE_F4, REST,
+};
+int worldOverworldTempos[] = {
+  2, 2,
+  8, 8,
+  4, 2,
+  8, 4,
+  4, 4, 4,
+  4, 8, 8, 4,
+  8, 8, 2,
+  4, 8, 8, 8,
+  4, 2, 8,
+  4, 4,
+  8, 8, 8, 
+  2, 2,
+};
+int worldOverworldBaseTempo = 240;
+int worldOverworldSize = sizeof(worldOverworldNotes) / sizeof(worldOverworldNotes[0]);
+
 void playMelody(int notes[], int tempos[], int baseTempo, int size, int repeat=1) {
   for (repeat; repeat > 0; repeat--) {
     for (int i = 0; i < size; i++) {
@@ -232,11 +300,13 @@ void setup() {
   // Declare buzzer pin as output
   pinMode(buzzer, OUTPUT);
 
+  Serial.println("Playing Super Mario World - Overworld Theme Music ...");
+  playMelody(worldOverworldNotes, worldOverworldTempos, worldOverworldBaseTempo, worldOverworldSize);
   Serial.println("Playing Super Mario Bros 2 (NES) Music - Overworld Theme ...");
-  playMelody(overworldNotes, overworldTempos, overworldBaseTempo, overworldSize);
-  Serial.println("Playing Super Mario Bros 2 (NES) Music - Ending Theme ...");
-  playMelody(undergroundNotes, undergroundTempos, undergroundBaseTempo, undergroundSize);
+  playMelody(bros2OverworldNotes, bros2OverworldTempos, bros2OverworldBaseTempo, bros2OverworldSize);
   Serial.println("Playing Super Mario Bros - Underground Theme ...");
+  playMelody(undergroundNotes, undergroundTempos, undergroundBaseTempo, undergroundSize);
+  Serial.println("Playing Super Mario Bros 2 (NES) Music - Ending Theme ...");
   playMelody(endingNotes, endingTempos, endingBaseTempo, endingSize, 2);
   Serial.println("Playing Super Mario Bros (NES) Music - Underwater Theme ...");
   playMelody(underwaterNotes, underwaterTempos, underwaterBaseTempo, underwaterSize);

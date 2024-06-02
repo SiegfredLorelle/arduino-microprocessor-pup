@@ -89,71 +89,121 @@
 #define NOTE_D8 4699
 #define NOTE_DS8 4978
 
-int but1 = 2;
-int but2 = 3;
-int but3 = 4;
-int but4 = 5;
-int but5 = 6;
-int but6 = 7;
-int but7 = 8;
-int but8 = 9;
-
 int buzzer = 10;
 
 // Mario Underworld melody
 int underworld_melody[] = {
-  NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4,
-  NOTE_AS3, NOTE_AS4, 0,
-  0,
-  NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4,
-  NOTE_AS3, NOTE_AS4, 0,
-  0,
-  NOTE_F3, NOTE_F4, NOTE_D3, NOTE_D4,
-  NOTE_DS3, NOTE_DS4, 0,
-  0,
-  NOTE_F3, NOTE_F4, NOTE_D3, NOTE_D4,
-  NOTE_DS3, NOTE_DS4, 0,
-  0, NOTE_DS4, NOTE_CS4, NOTE_D4,
-  NOTE_CS4, NOTE_DS4,
-  NOTE_DS4, NOTE_GS3,
-  NOTE_G3, NOTE_CS4,
-  NOTE_C4, NOTE_FS4, NOTE_F4, NOTE_E3, NOTE_AS4, NOTE_A4,
-  NOTE_GS4, NOTE_DS4, NOTE_B3,
-  NOTE_AS3, NOTE_A3, NOTE_GS3,
-  0, 0, 0
+  NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4, NOTE_AS3, NOTE_AS4,
+  REST, REST, REST,
+  NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4, NOTE_AS3, NOTE_AS4,
+  REST, REST, REST,
+
+  NOTE_F3, NOTE_F4, NOTE_D3, NOTE_D4, NOTE_DS3, NOTE_DS4,
+  REST, REST, REST,
+  NOTE_F3, NOTE_F4, NOTE_D3, NOTE_D4, NOTE_DS3, NOTE_DS4,
+
+  REST, REST, NOTE_DS4, NOTE_D4, NOTE_CS4,
+
+  NOTE_C4, REST, NOTE_DS4, REST, NOTE_D4, REST,
+  NOTE_GS3, REST, NOTE_G3, REST, NOTE_CS4, REST,
+
+  NOTE_C4, NOTE_FS4, NOTE_F4, NOTE_E4, NOTE_AS4, NOTE_A4, NOTE_GS4, NOTE_DS4,
+  REST, NOTE_B3, REST, NOTE_AS3, NOTE_A3, REST, NOTE_GS3, REST,
 };
 int underworld_tempo[] = {
-  12, 12, 12, 12,
-  12, 12, 6,
-  3,
-  12, 12, 12, 12,
-  12, 12, 6,
-  3,
-  12, 12, 12, 12,
-  12, 12, 6,
-  3,
-  12, 12, 12, 12,
-  12, 12, 6,
-  6, 18, 18, 18,
-  6, 6,
-  6, 6,
-  6, 6,
-  18, 18, 18, 18, 18, 18,
-  10, 10, 10,
-  10, 10, 10,
-  3, 3, 3
+  8, 8, 8, 8, 8, 8,
+  4, 4, 4,
+  8, 8, 8, 8, 8, 8,
+  4, 4, 4,
+
+  8, 8, 8, 8, 8, 8,
+  4, 4, 4,
+  8, 8, 8, 8, 8, 8,
+
+  4, 4, 16, 16, 8,
+
+  8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8,
+
+  16, 16, 8, 16, 16, 8, 8, 8,
+  16, 8, 16, 8, 8, 16, 8, 16,
 };
+int underworld_size = sizeof(underworld_melody) / sizeof(underworld_melody[0]);
 
 // Mario Star Theme 2 melody
 int star_melody[] = {
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
-  NOTE_F5, NOTE_F5, NOTE_F5, NOTE_D5, NOTE_F5, NOTE_F5, NOTE_D5,NOTE_F5, NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
+  NOTE_D5,
+  NOTE_F5,
+  NOTE_F5,
 };
 int star_tempo[] = {
   4, 4, 4, 8, 4, 4, 8, 4, 4,
@@ -168,8 +218,8 @@ int star_tempo[] = {
 
 // Super Mario 2 NES Ending Theme melody
 int mario2_ending_melody[] = {
-   NOTE_G4, NOTE_C5, NOTE_E5, NOTE_G5, 
-  NOTE_E5, NOTE_G5, NOTE_A5, NOTE_B5, 
+  NOTE_G4, NOTE_C5, NOTE_E5, NOTE_G5,
+  NOTE_E5, NOTE_G5, NOTE_A5, NOTE_B5,
   NOTE_A5, NOTE_G5, NOTE_E5, NOTE_C5,
   NOTE_D5, NOTE_E5, NOTE_F5, NOTE_G5,
   NOTE_E5, NOTE_F5, NOTE_E5, NOTE_C5,
@@ -212,38 +262,34 @@ int mario2_ending_tempo[] = {
   1, 1, 2, 1
 };
 
-void playMelody(int melody[], int tempo[], int length, int duration) {
-  unsigned long startTime = millis();
+void playMelody(int melody[], int tempo[], int size) {
   int noteDuration, pauseBetweenNotes;
-  for (int i = 0; i < length && (millis() - startTime) < duration; i++) {
+  for (int i = 0; i < size; i++) {
     noteDuration = 1000 / tempo[i];
     tone(buzzer, melody[i], noteDuration);
     pauseBetweenNotes = noteDuration * 1.30;
     delay(pauseBetweenNotes);
   }
+  noTone(buzzer);
+  delay(1000);
 }
 
 void setup() {
-  // Let's declare the button pins as input
-  pinMode(but1, INPUT);
-  pinMode(but2, INPUT);
-  pinMode(but3, INPUT);
-  pinMode(but4, INPUT);
-  pinMode(but5, INPUT);
-  pinMode(but6, INPUT);
-  pinMode(but7, INPUT);
-  pinMode(but8, INPUT);
+  Serial.begin(9600);
   // Declare buzzer pin as output
   pinMode(buzzer, OUTPUT);
+
+  // Play Underworld melody for 20 seconds
+  Serial.println("Playing Underworld Theme ...");
+  playMelody(underworld_melody, underworld_tempo, underworld_size);
+  // Play Overworld Theme 2 melody for 20 seconds
+  Serial.println("Playing Overworld Theme ...");
+  playMelody(star_melody, star_tempo, sizeof(star_melody) / sizeof(int));
+  // Play Super Mario 2 NES Ending Theme for 20 seconds
+  Serial.println("Playing Super Mario 2 NES Ending Theme ...");
+  playMelody(mario2_ending_melody, mario2_ending_tempo, sizeof(mario2_ending_melody) / sizeof(int));
+  Serial.println("DONE PLAYING");
 }
 
 void loop() {
-  // Play Underworld melody for 20 seconds
-  playMelody(underworld_melody, underworld_tempo, sizeof(underworld_melody) / sizeof(int), 20000);
-
-  // Play Overworld Theme 2 melody for 20 seconds
-  playMelody(star_melody, star_tempo, sizeof(star_melody) / sizeof(int), 20000);
-
-  // Play Super Mario 2 NES Ending Theme for 20 seconds
-  playMelody(mario2_ending_melody, mario2_ending_tempo, sizeof(mario2_ending_melody) / sizeof(int), 20000);
 }

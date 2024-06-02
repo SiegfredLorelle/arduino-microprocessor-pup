@@ -82,13 +82,38 @@ int underworldSize = sizeof(underworldNotes) / sizeof(underworldNotes[0]);
 
 
 // Super Mario Bros 2 - Overworld Theme
-int overworld_melody[] = {
-  NOTE_G5, REST, NOTE_C5, NOTE_E5, REST, NOTE_G5, NOTE_G5, NOTE_G5, NOTE_C5, NOTE_E5, REST, NOTE_G5,
+int overworldNotes[] = {
+  NOTE_G5, REST, NOTE_C5, NOTE_E5, REST, NOTE_G5, 
+  NOTE_G5, NOTE_C5, NOTE_E5, REST, NOTE_G5,
+
+  NOTE_B4, NOTE_DS5, NOTE_G5, NOTE_B5, REST, 
+  
+  NOTE_A5,  NOTE_A5, NOTE_A5, REST,
+
+  NOTE_G5, REST, NOTE_AS4, NOTE_D5, REST, NOTE_G5, NOTE_G5, NOTE_G5, NOTE_AS4, NOTE_D5, REST, NOTE_G5,
+  NOTE_CS5, NOTE_E5, NOTE_G5, NOTE_B5, REST, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_B5,
+  NOTE_C6, REST, NOTE_B5, NOTE_C6, REST, NOTE_A5, NOTE_A5, NOTE_A5, NOTE_C6, NOTE_B5, REST, NOTE_A5,
+  NOTE_G5, REST, NOTE_FS5, NOTE_G5, REST, NOTE_E5, NOTE_E5, NOTE_E5, NOTE_CS5, NOTE_D5, REST, NOTE_E5,
+  NOTE_F5, REST, NOTE_E5, NOTE_F5, REST, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_E5, NOTE_D5, REST, NOTE_C4,
+  NOTE_C4, NOTE_C4, NOTE_C4, NOTE_C4, NOTE_C4, REST, REST, REST, REST, REST, REST, REST,
 };
-int overworld_tempo[] = {
-  10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+int overworldTempos[] = {
+  8, 8, 8, 8, 8, 8, 
+  4, 8, 8, 8, 8, 8,
+
+  8, 8, 8, 8, 8, 
+
+  4, 4, 4, 8,
+
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
 };
-int overworld_size = sizeof(overworld_melody) / sizeof(overworld_melody[0]);
+int overworldBaseTempo = 300;
+int overworldSize = sizeof(overworldNotes) / sizeof(overworldNotes[0]);
 
 // Mario Star Theme 2 melody
 int star_melody[] = {
@@ -250,8 +275,8 @@ void setup() {
   Serial.println("Playing Underworld Theme ...");
   playMelody(underworldNotes, underworldTempos, underworldBaseTempo, underworldSize);
   // Play Super Mario Bros 2 - Overworld Theme
-  // Serial.println("Playing Underworld Theme ...");
-  // playMelody(overworld_melody, overworld_tempo, overworld_size);
+  Serial.println("Playing Underworld Theme ...");
+  playMelody(overworldNotes, overworldTempos, overworldBaseTempo, overworldSize);
 
 
 

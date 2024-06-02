@@ -38,11 +38,10 @@
 #define NOTE_C6 1047
 #define NOTE_CS6 1109
 
-
 int buzzer = 10;
 
-// Mario Underworld melody
-int underworld_melody[] = {
+// Super Mario Bros - Underground Theme
+int underworldNotes[] = {
   NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4, NOTE_AS3, NOTE_AS4,
   REST, REST, REST,
   NOTE_C4, NOTE_C5, NOTE_A3, NOTE_A4, NOTE_AS3, NOTE_AS4,
@@ -60,7 +59,7 @@ int underworld_melody[] = {
   NOTE_C4, NOTE_FS4, NOTE_F4, NOTE_E4, NOTE_AS4, NOTE_A4, NOTE_GS4, NOTE_DS4,
   REST, NOTE_B3, REST, NOTE_AS3, NOTE_A3, REST, NOTE_GS3, REST,
 };
-int underworld_tempo[] = {
+int underworldTempos[] = {
   8, 8, 8, 8, 8, 8,
   4, 4, 4,
   8, 8, 8, 8, 8, 8,
@@ -78,7 +77,18 @@ int underworld_tempo[] = {
   16, 16, 8, 16, 16, 8, 8, 8,
   16, 8, 16, 8, 8, 16, 8, 16,
 };
-int underworld_size = sizeof(underworld_melody) / sizeof(underworld_melody[0]);
+int underworldBaseTempo = 198;
+int underworldSize = sizeof(underworldNotes) / sizeof(underworldNotes[0]);
+
+
+// Super Mario Bros 2 - Overworld Theme
+int overworld_melody[] = {
+  NOTE_G5, REST, NOTE_C5, NOTE_E5, REST, NOTE_G5, NOTE_G5, NOTE_G5, NOTE_C5, NOTE_E5, REST, NOTE_G5,
+};
+int overworld_tempo[] = {
+  10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+};
+int overworld_size = sizeof(overworld_melody) / sizeof(overworld_melody[0]);
 
 // Mario Star Theme 2 melody
 int star_melody[] = {
@@ -212,16 +222,23 @@ int mario2_ending_tempo[] = {
   1, 1, 2, 1
 };
 
-void playMelody(int melody[], int tempo[], int size) {
-  int noteDuration, pauseBetweenNotes;
+void playMelody(int notes[], int tempos[], int baseTempo, int size) {
+  // int noteDuration, pauseBetweenNotes;
   for (int i = 0; i < size; i++) {
-    noteDuration = 1000 / tempo[i];
-    tone(buzzer, melody[i], noteDuration);
-    pauseBetweenNotes = noteDuration * 1.30;
-    delay(pauseBetweenNotes);
-  }
+  //   noteDuration = 1000 / tempo[i];
+  //   tone(buzzer, notes[i], noteDuration);
+  //   pauseBetweenNotes = noteDuration * 1.30;
+  //   delay(pauseBetweenNotes);
+  // }
+  // noTone(buzzer);
+  // delay(1000);
+
+  // int baseTempo = 198;
+  int noteDuration = (60000 * 4 / baseTempo) / tempos[i]; // Calculate duration in milliseconds
+  tone(buzzer, notes[i], noteDuration);
+  delay(noteDuration * 1.05); // Add a slight pause between notes
   noTone(buzzer);
-  delay(1000);
+  }
 }
 
 void setup() {
@@ -229,17 +246,29 @@ void setup() {
   // Declare buzzer pin as output
   pinMode(buzzer, OUTPUT);
 
-  // Play Underworld melody for 20 seconds
+  // Play Super Mario Bros - Underground Theme
   Serial.println("Playing Underworld Theme ...");
-  playMelody(underworld_melody, underworld_tempo, underworld_size);
+  playMelody(underworldNotes, underworldTempos, underworldBaseTempo, underworldSize);
+  // Play Super Mario Bros 2 - Overworld Theme
+  // Serial.println("Playing Underworld Theme ...");
+  // playMelody(overworld_melody, overworld_tempo, overworld_size);
+
+
+
   // Play Overworld Theme 2 melody for 20 seconds
-  Serial.println("Playing Overworld Theme ...");
-  playMelody(star_melody, star_tempo, sizeof(star_melody) / sizeof(int));
-  // Play Super Mario 2 NES Ending Theme for 20 seconds
-  Serial.println("Playing Super Mario 2 NES Ending Theme ...");
-  playMelody(mario2_ending_melody, mario2_ending_tempo, sizeof(mario2_ending_melody) / sizeof(int));
+  // Serial.println("Playing Overworld Theme ...");
+  // playMelody(star_melody, star_tempo, sizeof(star_melody) / sizeof(int));
+  // // Play Super Mario 2 NES Ending Theme for 20 seconds
+  // Serial.println("Playing Super Mario 2 NES Ending Theme ...");
+  // playMelody(mario2_ending_melody, mario2_ending_tempo, sizeof(mario2_ending_melody) / sizeof(int));
   Serial.println("DONE PLAYING");
 }
 
 void loop() {
+  // int baseTempo = 200;
+  // int noteDuration = (60000 * 4 / baseTempo[i]) / underworld_tempo[i]; // Calculate duration in milliseconds
+  // tone(speakerPin, underworld_melody, noteDuration);
+  // delay(noteDuration * 1.1); // Add a slight pause between notes
+  // noTone(buzzer);
 }
+// }

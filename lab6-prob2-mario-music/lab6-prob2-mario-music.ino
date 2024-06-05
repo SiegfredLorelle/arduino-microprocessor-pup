@@ -1,41 +1,41 @@
-#define REST 0
-#define NOTE_C3 131
-#define NOTE_CS3 139
-#define NOTE_D3 147
-#define NOTE_DS3 156
-#define NOTE_E3 165
-#define NOTE_F3 175
-#define NOTE_FS3 185
-#define NOTE_G3 196
-#define NOTE_GS3 208
-#define NOTE_A3 220
-#define NOTE_AS3 233
-#define NOTE_B3 247
-#define NOTE_C4 262
-#define NOTE_CS4 277
-#define NOTE_D4 294
-#define NOTE_DS4 311
-#define NOTE_E4 330
-#define NOTE_F4 349
-#define NOTE_FS4 370
-#define NOTE_G4 392
-#define NOTE_GS4 415
-#define NOTE_A4 440
-#define NOTE_AS4 466
-#define NOTE_B4 494
-#define NOTE_C5 523
-#define NOTE_CS5 554
-#define NOTE_D5 587
-#define NOTE_DS5 622
-#define NOTE_E5 659
-#define NOTE_F5 698
-#define NOTE_FS5 740
-#define NOTE_G5 784
-#define NOTE_GS5 831
-#define NOTE_A5 880
-#define NOTE_AS5 932
-#define NOTE_B5 988
-#define NOTE_C6 1047
+const int REST = 0;
+const int NOTE_C3 = 131;
+const int NOTE_CS3 = 139;
+const int NOTE_D3 = 147;
+const int NOTE_DS3 = 156;
+const int NOTE_E3 = 165;
+const int NOTE_F3 = 175;
+const int NOTE_FS3 = 185;
+const int NOTE_G3 = 196;
+const int NOTE_GS3 = 208;
+const int NOTE_A3 = 220;
+const int NOTE_AS3 = 233;
+const int NOTE_B3 = 247;
+const int NOTE_C4 = 262;
+const int NOTE_CS4 = 277;
+const int NOTE_D4 = 294;
+const int NOTE_DS4 = 311;
+const int NOTE_E4 = 330;
+const int NOTE_F4 = 349;
+const int NOTE_FS4 = 370;
+const int NOTE_G4 = 392;
+const int NOTE_GS4 = 415;
+const int NOTE_A4 = 440;
+const int NOTE_AS4 = 466;
+const int NOTE_B4 = 494;
+const int NOTE_C5 = 523;
+const int NOTE_CS5 = 554;
+const int NOTE_D5 = 587;
+const int NOTE_DS5 = 622;
+const int NOTE_E5 = 659;
+const int NOTE_F5 = 698;
+const int NOTE_FS5 = 740;
+const int NOTE_G5 = 784;
+const int NOTE_GS5 = 831;
+const int NOTE_A5 = 880;
+const int NOTE_AS5 = 932;
+const int NOTE_B5 = 988;
+const int NOTE_C6 = 1047;
 
 int buzzer = 10;
 
@@ -301,6 +301,7 @@ int worldOverworldBaseTempo = 240;
 int worldOverworldSize = sizeof(worldOverworldNotes) / sizeof(worldOverworldNotes[0]);
 
 void playMelody(int notes[], int tempos[], int baseTempo, int size, int repeat=1) {
+  /* Notes are played in the duration of its tempo. The base tempo is the song's beats per minute */
   for (repeat; repeat > 0; repeat--) {
     for (int i = 0; i < size; i++) {
     int noteDuration = (60000 * 4 / baseTempo) / tempos[i];
@@ -320,14 +321,19 @@ void setup() {
   Serial.println("Start playing");
   Serial.println("Playing Super Mario Party OST - Main Theme ...");
   playMelody(partyOSTNotes, partyOSTTempos, partyOSTBaseTempo, partyOSTSize);
+
   Serial.println("Playing Super Mario World - Overworld Theme Music ...");
   playMelody(worldOverworldNotes, worldOverworldTempos, worldOverworldBaseTempo, worldOverworldSize);
+
   Serial.println("Playing Super Mario Bros 2 (NES) Music - Overworld Theme ...");
   playMelody(bros2OverworldNotes, bros2OverworldTempos, bros2OverworldBaseTempo, bros2OverworldSize);
+
   Serial.println("Playing Super Mario Bros - Underground Theme ...");
   playMelody(undergroundNotes, undergroundTempos, undergroundBaseTempo, undergroundSize);
+
   Serial.println("Playing Super Mario Bros 2 (NES) Music - Ending Theme ...");
   playMelody(endingNotes, endingTempos, endingBaseTempo, endingSize, 2);
+  
   Serial.println("Playing Super Mario Bros (NES) Music - Underwater Theme ...");
   playMelody(underwaterNotes, underwaterTempos, underwaterBaseTempo, underwaterSize);
   Serial.println("Finish playing");

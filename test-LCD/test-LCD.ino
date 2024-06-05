@@ -71,6 +71,17 @@ byte codeLeft[8] = {
   0b00000
 };
 
+byte codeRight[8] = {
+  0b01000,
+  0b00100,
+  0b00010,
+  0b00001,
+  0b00010,
+  0b00100,
+  0b01000,
+  0b00000
+};
+
 void setup() 
 {
 	// set up the LCD's number of columns and rows:
@@ -84,6 +95,8 @@ void setup()
   lcd.createChar(2, peaceRight);
   lcd.createChar(3, heartLeft);
   lcd.createChar(4, heartRight);
+  lcd.createChar(5, codeLeft);
+  lcd.createChar(6, codeRight);
 
   lcd.setCursor(1, 0);
   lcd.write(byte(0));
@@ -94,6 +107,10 @@ void setup()
   lcd.setCursor(7, 0);
 	lcd.write(byte(3));
 	lcd.write(byte(4));
+
+  lcd.setCursor(12, 0);
+	lcd.write(byte(5));
+	lcd.write(byte(6));
 
   lcd.setCursor(0, 1);
   lcd.print("Peace Love Code");

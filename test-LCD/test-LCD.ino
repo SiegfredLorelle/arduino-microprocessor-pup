@@ -38,9 +38,38 @@ byte peaceRight[8] = {
 0b00000
 };
 
-  // Define characters for the top and bottom half of the heart
-  char topHeart[] = {0, 3, 127, 42, 32, 8, 0};
-  char bottomHeart[] = {0, 8, 32, 126, 42, 3, 0};
+byte heartLeft[8] = {
+  0b00110,
+  0b01111,
+  0b11111,
+  0b11111,
+  0b01111,
+  0b00111,
+  0b00011,
+  0b00001
+};
+
+byte heartRight[8] = {
+  0b01100,
+  0b11110,
+  0b11111,
+  0b11111,
+  0b11110,
+  0b11100,
+  0b11000,
+  0b10000
+};
+
+byte codeLeft[8] = {
+  0b00010,
+  0b00100,
+  0b01000,
+  0b10000,
+  0b01000,
+  0b00100,
+  0b00010,
+  0b00000
+};
 
 void setup() 
 {
@@ -53,22 +82,25 @@ void setup()
   lcd.createChar(0, peaceLeft);
   lcd.createChar(1, peaceMid);
   lcd.createChar(2, peaceRight);
-}
+  lcd.createChar(3, heartLeft);
+  lcd.createChar(4, heartRight);
 
-void loop() 
-{
-	// Print a message to the LCD.
-  lcd.setCursor(0, 0);
+  lcd.setCursor(1, 0);
   lcd.write(byte(0));
   lcd.write(byte(1));
   lcd.write(byte(2));
 
-  lcd.setCursor(5, 0);
-	lcd.print("TEST1");
 
-	// set the cursor to column 0, line 1
-	// (note: line 1 is the second row, since counting begins with 0):
-	lcd.setCursor(3, 1);
-	// Print a message to the LCD.
-	lcd.print("LCD Testing");
+  lcd.setCursor(7, 0);
+	lcd.write(byte(3));
+	lcd.write(byte(4));
+
+  lcd.setCursor(0, 1);
+  lcd.print("Peace Love Code");
+}
+
+
+void loop() 
+{
+
 }

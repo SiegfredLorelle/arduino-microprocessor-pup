@@ -2,19 +2,19 @@
 #include <LiquidCrystal_I2C.h>
 
 // Define LCD properties
-LiquidCrystal_I2C lcd(0x27, 16, 2); // Change 0x27 to the address of your LCD
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Define the keypad
-const byte ROWS = 4; // Four rows
-const byte COLS = 4; // Four columns
+const byte ROWS = 4;
+const byte COLS = 4; 
 char keys[ROWS][COLS] = {
   {'1','2','3','A'},
   {'4','5','6','B'},
   {'7','8','9','C'},
   {'*','0','#','D'}
 };
-byte rowPins[ROWS] = {9, 8, 7, 6}; // Connect to the row pinouts of the keypad
-byte colPins[COLS] = {5, 4, 3, 2}; // Connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {9, 8, 7, 6};
+byte colPins[COLS] = {5, 4, 3, 2};
 
 // Create an object of Keypad
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
@@ -28,7 +28,6 @@ void setup() {
 void loop() {
   // Prompt for asking of name and password
   String userName = getUsername("ENTER YOUR NAME:");
-  lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(userName);
   delay(2000);
@@ -37,6 +36,14 @@ void loop() {
   lcd.setCursor(0, 0);
   lcd.print(password);
   delay(2000);
+
+  // Display welcome message
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("WELCOME,");
+  lcd.setCursor(0, 1);
+  lcd.print(userName + "!!!!");
+  delay(20000);
 }
 
 // Function to get the username from the keyboard

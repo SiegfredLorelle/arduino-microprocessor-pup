@@ -21,6 +21,9 @@ byte colPins[COLS] = {5, 4, 3, 2};
 // Create an object of Keypad
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
+// Global password for verification
+const String globalPassword = "ABCD1234#";
+
 void setup() {
   Serial.begin(9600);
   lcd.init();
@@ -34,21 +37,42 @@ void loop() {
   lcd.print(userName);
   delay(2000);
 
-  String password = getPassword("ENTER YOUR PASSWORD:");
-  lcd.setCursor(0, 0);
-  lcd.print(password);
-  delay(2000);
+ bool accessGranted = false;
+  for (int attempt = 1; attempt <= 3; attempt++) {
+    String password = getPassword("ENTER YOUR PASSWORD:");
+    lcd.setCursor(0, 0);
+    lcd.print(password);
+    delay(2000);
+    
+    if (password == globalPassword) {
+      accessGranted = true;
+      break;
+    } else {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("ACCESS DENIED!!!");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print(attempt);
+      lcd.print(" ATTEMPT");
+      lcd.setCursor(0, 1);
+      lcd.print("ALREADY");
+      delay(2000);
+    }
+  }
 
-  // Store name and password
-  storeUser(userName, password);
-
-  // Display welcome message
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("WELCOME,");
-  lcd.setCursor(0, 1);
-  lcd.print(userName + "!!!!");
-  delay(20000);
+  if (accessGranted) {
+    // Display welcome message
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("WELCOME,");
+    lcd.setCursor(0, 1);
+    lcd.print(userName + "!!!!");
+    delay(20000);
+  } else {
+      disableKeypad();
+  }
 }
 
 // Function to get the username from the keyboard
@@ -95,4 +119,10 @@ String getPassword(String prompt) {
     }
   }
   return password;
+}
+
+void disableKeypad() {
+  while (true) {
+    lcd.clear();
+  }
 }

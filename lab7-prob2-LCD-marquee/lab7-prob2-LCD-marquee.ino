@@ -10,6 +10,12 @@ int rightThreshold = 100; // Adjust threshold based on your LDR sensitivity
 String welcomeMessage = "WELCOME TO THE PUP-CPE DEPARTMENT";  // Message for left LDR
 String byeMessage = "GOODBYE, SEE YOU AGAIN NEXT TIME!!!!"; // Message for right LDR
 
+const String messages[2] {
+  "WELCOME TO THE PUP-CPE DEPARTMENT",
+  "GOODBYE, SEE YOU AGAIN NEXT TIME!!!!",
+};
+int messageToPlay = -1;
+
 
 void setup() {
   Serial.begin(9600);
@@ -21,26 +27,19 @@ void setup() {
 void loop() {
   lcd.clear();
 
-  int leftValue = analogRead(ldrLeft);
-  int rightValue = analogRead(ldrRight);
 
-  Serial.print("Left:");
-  Serial.print(leftValue);
-  Serial.print("  Right:");
-  Serial.println(rightValue);
+  messageToPlay = checkLDRsStates();
 
-  bool leftHasLight = leftValue > leftThreshold;
-  bool rightHasLight = rightValue > rightThreshold;
-
-  if (leftHasLight == rightHasLight) {
-    return;
-  }
-  if (leftHasLight && !rightHasLight) {
-     displayMarqueeToRight(welcomeMessage);
-  } 
-
-  else if (!leftHasLight && rightHasLight) {
-    displayMarqueeToRight(byeMessage);
+  switch (messageToPlay) {
+    case -1:
+      return;
+    case 0:
+      displayMarqueeToRight(messages[0]);
+      break;
+    case 1:
+      displayMarqueeToRight(messages[1]);
+    default:
+      return;
   }
 }
 
@@ -51,6 +50,8 @@ void displayMarqueeToLeft(String message) {
   int end = 17;
 
   while (start < newMessage.length()) {
+    if (messageToPlay != checkLDRsStates()) return;
+
     lcd.setCursor(0, 0);
     Serial.println(newMessage.substring(start, end));
     lcd.print(newMessage.substring(start, end));
@@ -64,12 +65,15 @@ void displayMarqueeToLeft(String message) {
 }
 
 void displayMarqueeToRight(String message) {
+
   lcd.clear();
   String newMessage =  "               " + message + "                  ";
   int start = newMessage.length() - 17;
   int end = newMessage.length() - 1;
 
   while (start >= 0) {
+    if (messageToPlay != checkLDRsStates()) return;
+
     lcd.setCursor(0, 0);
     Serial.println(newMessage.substring(start, end));
     lcd.print(newMessage.substring(start, end));
@@ -82,4 +86,26 @@ void displayMarqueeToRight(String message) {
   }
 }
 
-// Detect for change in LDR
+int checkLDRsStates() {
+  int leftValue = analogRead(ldrLeft);
+  int rightValue = analogRead(ldrRight);
+
+  Serial.print("Left:");
+  Serial.print(leftValue);
+  Serial.print("  Right:");
+  Serial.println(rightValue);
+
+  bool leftHasLight = leftValue > leftThreshold;
+  bool rightHasLight = rightValue > rightThreshold;
+
+  if (leftHasLight == rightHasLight) {
+    return -1;
+  }
+  if (leftHasLight && !rightHasLight) {
+    return 0;
+  } 
+
+  else if (!leftHasLight && rightHasLight) {
+    return 1;
+  }
+}

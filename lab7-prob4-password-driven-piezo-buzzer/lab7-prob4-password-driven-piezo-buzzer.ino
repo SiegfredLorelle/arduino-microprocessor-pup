@@ -1,4 +1,5 @@
 #include <Keypad.h>
+#include <LiquidCrystal_I2C.h>
 
 // Define the keypad
 const byte ROWS = 4; // Four rows

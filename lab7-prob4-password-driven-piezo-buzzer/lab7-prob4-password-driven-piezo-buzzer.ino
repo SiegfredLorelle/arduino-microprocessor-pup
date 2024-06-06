@@ -25,6 +25,9 @@ void setup() {
   Serial.begin(9600);
   lcd.init();
   lcd.backlight();
+
+  // Uncomment next line to reset the EEPROM space
+  // resetEEPROM();
 }
 
 void loop() {
@@ -119,4 +122,13 @@ void storeUser(String userName, String password) {
     EEPROM.write(0, userCount + 1); // Update the user count
     EEPROM.write(1, address); // Update the address of the next available space
   }
+}
+
+// Function to reset the EEPROM
+void resetEEPROM() {
+  for (int i = 0; i < EEPROM.length(); i++) {
+    EEPROM.write(i, 0);
+  }
+  EEPROM.write(0, 0); // Reset user count
+  EEPROM.write(1, 1); // Reset next available address
 }

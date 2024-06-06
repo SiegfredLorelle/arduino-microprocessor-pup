@@ -28,45 +28,18 @@ const String globalPassword = "ABCD1234#";
 const int ledPins[] = {10, 11, 12, 13};
 const int numLeds = sizeof(ledPins) / sizeof(ledPins[0]);
 
+// Define buzzer pin
+const int buzzerPin = A0;
+
 // Define note frequencies
-const int REST = 0;
-const int NOTE_C3 = 131;
-const int NOTE_CS3 = 139;
-const int NOTE_D3 = 147;
-const int NOTE_DS3 = 156;
-const int NOTE_E3 = 165;
-const int NOTE_F3 = 175;
-const int NOTE_FS3 = 185;
-const int NOTE_G3 = 196;
-const int NOTE_GS3 = 208;
-const int NOTE_A3 = 220;
-const int NOTE_AS3 = 233;
-const int NOTE_B3 = 247;
-const int NOTE_C4 = 262;
-const int NOTE_CS4 = 277;
-const int NOTE_D4 = 294;
-const int NOTE_DS4 = 311;
-const int NOTE_E4 = 330;
-const int NOTE_F4 = 349;
-const int NOTE_FS4 = 370;
-const int NOTE_G4 = 392;
-const int NOTE_GS4 = 415;
-const int NOTE_A4 = 440;
-const int NOTE_AS4 = 466;
-const int NOTE_B4 = 494;
-const int NOTE_C5 = 523;
-const int NOTE_CS5 = 554;
-const int NOTE_D5 = 587;
-const int NOTE_DS5 = 622;
 const int NOTE_E5 = 659;
-const int NOTE_F5 = 698;
-const int NOTE_FS5 = 740;
 const int NOTE_G5 = 784;
-const int NOTE_GS5 = 831;
+const int NOTE_C5 = 523;
 const int NOTE_A5 = 880;
-const int NOTE_AS5 = 932;
-const int NOTE_B5 = 988;
 const int NOTE_C6 = 1047;
+const int NOTE_F5 = 698;
+const int NOTE_B5 = 988;
+const int NOTE_D6 = 977;
 
 void setup() {
   Serial.begin(9600);
@@ -167,24 +140,48 @@ String getPassword(String prompt) {
   return password;
 }
 
-void disableKeypad() {
-  while (true) {
-    lcd.clear();
-    for (int i = 0; i < numLeds; i++) {
-      digitalWrite(ledPins[i], HIGH);
-    }
-  }
-}
+// Selecta Theme Song
+// Notes from https://www.youtube.com/watch?v=NNSRxQPz5UM
+int selectaThemeSongNotes[] = {
+  NOTE_E5, NOTE_G5, NOTE_C5,
+
+  NOTE_A5, NOTE_C6, NOTE_F5,
+
+  NOTE_G5, NOTE_A5, NOTE_B5, NOTE_A5, NOTE_B5,
+
+  NOTE_D6, NOTE_C6,
+
+  NOTE_E5, NOTE_G5, NOTE_C5,
+
+  NOTE_A5, NOTE_C6, NOTE_F5,
+
+  NOTE_G5, NOTE_A5, NOTE_B5, NOTE_A5, NOTE_B5,
+
+  NOTE_D6, NOTE_C6,
+};
+
+int selectaThemeSongBaseTempo = 600; // Adjusted base tempo
+int selectaThemeSongSize = sizeof(selectaThemeSongNotes) / sizeof(selectaThemeSongNotes[0]);
 
 void correctPassword() {
-  // Light LEDs from left to right
-  for (int i = 0; i < numLeds; i++) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(500);                      
-    digitalWrite(ledPins[i], LOW);  
+  // Iterate through each note in the melody
+  for (int i = 0; i < selectaThemeSongSize; i++) {
+    // Turn on LED
+    digitalWrite(ledPins[i % numLeds], HIGH);
+    // Play note
+    tone(buzzerPin, selectaThemeSongNotes[i]);
+    // Wait for the duration of the note
+    delay(150);
+    // Turn off LED
+    digitalWrite(ledPins[i % numLeds], LOW);
+    // Stop tone
+    noTone(buzzerPin);
+    // Wait for a short delay before next note
+    delay(250);
   }
 }
 
+// Function for incorrect password input
 void incorrectPassword() {
   // Blink all LEDs three times
   for (int j = 0; j < 3; j++) {
@@ -196,5 +193,19 @@ void incorrectPassword() {
       digitalWrite(ledPins[i], LOW);
     }
     delay(500); 
+  }
+}
+
+// Function to disable keypad
+void disableKeypad() {
+  while (true) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("ENTER YOUR");
+    lcd.setCursor(0, 1);
+    lcd.print("PASSWORD:");
+    for (int i = 0; i < numLeds; i++) {
+      digitalWrite(ledPins[i], HIGH);
+    }
   }
 }

@@ -18,6 +18,10 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {9, 8, 7, 6};
 byte colPins[COLS] = {5, 4, 3, 2};
 
+// Define the LED pins
+const int ledPins[] = {10, 11, 12, 13};
+const int numLeds = sizeof(ledPins) / sizeof(ledPins[0]);
+
 // Create an object of Keypad
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
@@ -46,6 +50,7 @@ void loop() {
     
     if (password == globalPassword) {
       accessGranted = true;
+      correctPassword();
       break;
     } else {
       lcd.clear();
@@ -124,5 +129,14 @@ String getPassword(String prompt) {
 void disableKeypad() {
   while (true) {
     lcd.clear();
+  }
+}
+
+void correctPassword() {
+  // Light LEDs from left to right
+  for (int i = 0; i < numLeds; i++) {
+    digitalWrite(ledPins[i], HIGH);
+    delay(500);                      
+    digitalWrite(ledPins[i], LOW);  
   }
 }

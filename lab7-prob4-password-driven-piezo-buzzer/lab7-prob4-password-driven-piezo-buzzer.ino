@@ -39,6 +39,9 @@ void loop() {
   lcd.print(password);
   delay(2000);
 
+  // Store name and password
+  storeUser(userName, password);
+
   // Display welcome message
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -92,4 +95,28 @@ String getPassword(String prompt) {
     }
   }
   return password;
+}
+
+
+// Function to store the username and password in EEPROM
+void storeUser(String userName, String password) {
+  int userCount = EEPROM.read(0);
+  if (userCount < 255) { // Adjust max user count based on available EEPROM space
+    int address = 1 + EEPROM.read(1); // Get the address of the next available space
+    int userNameLength = userName.length();
+    int passwordLength = password.length();
+    
+    EEPROM.write(address++, userNameLength);
+    for (int i = 0; i < userNameLength; i++) {
+      EEPROM.write(address++, userName[i]);
+    }
+    
+    EEPROM.write(address++, passwordLength);
+    for (int i = 0; i < passwordLength; i++) {
+      EEPROM.write(address++, password[i]);
+    }
+
+    EEPROM.write(0, userCount + 1); // Update the user count
+    EEPROM.write(1, address); // Update the address of the next available space
+  }
 }

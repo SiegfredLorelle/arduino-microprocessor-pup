@@ -36,14 +36,44 @@ void setup() {
 
 void loop() {
   // Execute command based on entered key
+  Menu();
   char key = keypad.getKey();
   if (key) {
       Serial.println(key);
     }
+  
   // askToTryAgain();
 }
 
-void displayMenu() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
+void Menu() {
+  int numOfLines = 5;
+  String lines[numOfLines] = {
+    "Calculator:   ",
+    "[A] +    [B] -",
+    "[C] x    [D] /",
+    "[*] C    [#] =",
+    "              ",
+  };
+
+  int row1 = 0;
+  int row2 = 1;
+  while (true) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(lines[row1]);
+    lcd.setCursor(0, 1);
+    lcd.print(lines[row2]);
+
+    for (int i = 0; i < 20; i++) {
+      if (keypad.getKey()) return;
+      delay(100);
+    }
+
+    if (row2 < numOfLines - 1) row2++;
+    if (row1 >= numOfLines - 2) {
+      row1 = 0;
+      row2 = 1;
+    }
+    else row1++;
+  }
 }

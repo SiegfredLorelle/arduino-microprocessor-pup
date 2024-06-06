@@ -7,8 +7,8 @@ const int ldrRight = A0; // Right LDR analog pin
 int leftThreshold = 20; // Adjust threshold based on your LDR sensitivity
 int rightThreshold = 100; // Adjust threshold based on your LDR sensitivity
 
-String message1 = "WELCOME TO THE PUP-CPE DEPARTMENT";  // Message for left LDR
-String message2 = "GOODBYE, SEE YOU AGAIN NEXT TIME!!!!"; // Message for right LDR
+String welcomeMessage = "WELCOME TO THE PUP-CPE DEPARTMENT";  // Message for left LDR
+String byeMessage = "GOODBYE, SEE YOU AGAIN NEXT TIME!!!!"; // Message for right LDR
 
 
 void setup() {
@@ -19,6 +19,8 @@ void setup() {
 }
 
 void loop() {
+  lcd.clear();
+
   int leftValue = analogRead(ldrLeft);
   int rightValue = analogRead(ldrRight);
 
@@ -27,17 +29,19 @@ void loop() {
   Serial.print("  Right:");
   Serial.println(rightValue);
 
-  // // Check left LDR
-  if (leftValue < leftThreshold) {
-     displayMarqueeToRight(message2); // Display from Right to right
-  } else {
-     displayMarqueeToRight(message1); // Display from left to right
+  bool leftHasLight = leftValue > leftThreshold;
+  bool rightHasLight = rightValue > rightThreshold;
+
+  if (leftHasLight == rightHasLight) {
+    return;
   }
+  if (leftHasLight && !rightHasLight) {
+     displayMarqueeToRight(welcomeMessage);
+  } 
 
-
-  
-  // Optional: Add delay for smoother scrolling
-  // delay(500);
+  else if (!leftHasLight && rightHasLight) {
+    displayMarqueeToRight(byeMessage);
+  }
 }
 
 void displayMarqueeToLeft(String message) {
@@ -78,5 +82,4 @@ void displayMarqueeToRight(String message) {
   }
 }
 
-// Func for marquee to right
 // Detect for change in LDR

@@ -25,7 +25,7 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 const String globalPassword = "ABCD1234#";
 
 // Define the LED pins
-const int ledPins[] = {10, 11, 12, 13};
+const int ledPins[] = {10, 11, 12, 13, A1, A2};
 const int numLeds = sizeof(ledPins) / sizeof(ledPins[0]);
 
 // Define buzzer pin

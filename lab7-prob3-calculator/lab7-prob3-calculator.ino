@@ -9,10 +9,10 @@ const byte cols = 4;
 
 // Keypad values
 char keys[rows][cols] = {
-  {'1','2','3', 'A'},
-  {'4','5','6', 'B'},
-  {'7','8','9', 'C'},
-  {'*','0','#', 'D'}
+  {'1','2','3', '+'},
+  {'4','5','6', '-'},
+  {'7','8','9', '*'},
+  {'C','0','=', '/'}
 };
 
 // Keypad pins
@@ -36,16 +36,12 @@ void setup() {
 
 void loop() {
   // Execute command based on entered key
-  Menu();
-  char key = keypad.getKey();
-  if (key) {
-      Serial.println(key);
-    }
+  menu();
+  calculator();
   
-  // askToTryAgain();
 }
 
-void Menu() {
+void menu() {
   int numOfLines = 5;
   String lines[numOfLines] = {
     "Calculator:   ",
@@ -65,7 +61,10 @@ void Menu() {
     lcd.print(lines[row2]);
 
     for (int i = 0; i < 20; i++) {
-      if (keypad.getKey()) return;
+      if (keypad.getKey()) {
+        lcd.clear();
+        return;
+      };
       delay(100);
     }
 
@@ -77,3 +76,40 @@ void Menu() {
     else row1++;
   }
 }
+
+
+char currOperator = ' ';
+void calculator() {
+  while (true) {
+    int num1 = getDigit();
+    Serial.println(num1);
+    Serial.println(currOperator);
+    // Display num1
+    // Display operator
+    // Get 2nd num
+    
+
+  }
+}
+
+int getDigit() {
+  String stringDigit = "";
+  while (true) {
+    char key = keypad.getKey();
+
+    if (isDigit(key)) {
+      stringDigit += key;
+      Serial.println(stringDigit);
+    }
+    else if (key == 'C') {
+      stringDigit = "";
+    }
+    else if (key && stringDigit.length() > 0) {
+      currOperator = key;
+      return stringDigit.toInt();
+    }
+  }
+}
+
+// Handle more than 16 chars (or cap at 16)
+// Handle edge cases

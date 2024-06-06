@@ -233,8 +233,11 @@ void disableKeypad() {
     lcd.print("ENTER YOUR");
     lcd.setCursor(0, 1);
     lcd.print("PASSWORD:");
+    // LEDs stay on
     for (int i = 0; i < numLeds; i++) {
       digitalWrite(ledPins[i], HIGH);
+      // Continuous tone
+      tone(buzzerPin, NOTE_E5);
     }
   }
 }

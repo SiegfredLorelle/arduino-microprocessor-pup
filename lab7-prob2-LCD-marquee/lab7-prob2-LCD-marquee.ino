@@ -29,9 +29,9 @@ void loop() {
 
   // // Check left LDR
   if (leftValue < leftThreshold) {
-     displayMarqueeToLeft(message2); // Display from left to right
+     displayMarqueeToRight(message2); // Display from Right to right
   } else {
-     displayMarqueeToLeft(message1); // Display from left to right
+     displayMarqueeToRight(message1); // Display from left to right
   }
 
 
@@ -42,7 +42,7 @@ void loop() {
 
 void displayMarqueeToLeft(String message) {
   lcd.clear();
-  String newMessage = "               " + message + "   ";
+  String newMessage = "                " + message + "  ";
   int start = 0;
   int end = 17;
 
@@ -55,7 +55,25 @@ void displayMarqueeToLeft(String message) {
       end++;
     };
     start++;
+    delay(250);
+  }
+}
 
+void displayMarqueeToRight(String message) {
+  lcd.clear();
+  String newMessage =  "               " + message + "                  ";
+  int start = newMessage.length() - 17;
+  int end = newMessage.length() - 1;
+
+  while (start >= 0) {
+    lcd.setCursor(0, 0);
+    Serial.println(newMessage.substring(start, end));
+    lcd.print(newMessage.substring(start, end));
+
+    if (end > 0) {
+      end--;
+    };
+    start--;
     delay(250);
   }
 }

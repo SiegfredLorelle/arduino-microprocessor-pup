@@ -25,9 +25,6 @@ void setup() {
   Serial.begin(9600);
   lcd.init();
   lcd.backlight();
-
-  // Uncomment next line to reset the EEPROM space
-  // resetEEPROM();
 }
 
 void loop() {
@@ -98,37 +95,4 @@ String getPassword(String prompt) {
     }
   }
   return password;
-}
-
-
-// Function to store the username and password in EEPROM
-void storeUser(String userName, String password) {
-  int userCount = EEPROM.read(0);
-  if (userCount < 255) { // Adjust max user count based on available EEPROM space
-    int address = 1 + EEPROM.read(1); // Get the address of the next available space
-    int userNameLength = userName.length();
-    int passwordLength = password.length();
-    
-    EEPROM.write(address++, userNameLength);
-    for (int i = 0; i < userNameLength; i++) {
-      EEPROM.write(address++, userName[i]);
-    }
-    
-    EEPROM.write(address++, passwordLength);
-    for (int i = 0; i < passwordLength; i++) {
-      EEPROM.write(address++, password[i]);
-    }
-
-    EEPROM.write(0, userCount + 1); // Update the user count
-    EEPROM.write(1, address); // Update the address of the next available space
-  }
-}
-
-// Function to reset the EEPROM
-void resetEEPROM() {
-  for (int i = 0; i < EEPROM.length(); i++) {
-    EEPROM.write(i, 0);
-  }
-  EEPROM.write(0, 0); // Reset user count
-  EEPROM.write(1, 1); // Reset next available address
 }

@@ -32,14 +32,24 @@ const int numLeds = sizeof(ledPins) / sizeof(ledPins[0]);
 const int buzzerPin = A0;
 
 // Define note frequencies
-const int NOTE_E5 = 659;
-const int NOTE_G5 = 784;
+const int REST = 0;
+const int NOTE_CS4 = 277;
+const int NOTE_D4 = 294;
+const int NOTE_E4 = 330;
+const int NOTE_FS4 = 370;
+const int NOTE_GS4 = 415;
+const int NOTE_A4 = 440;
+const int NOTE_B4 = 494;
 const int NOTE_C5 = 523;
-const int NOTE_A5 = 880;
-const int NOTE_C6 = 1047;
+const int NOTE_CS5 = 554;
+const int NOTE_D5 = 587;
+const int NOTE_E5 = 659;
 const int NOTE_F5 = 698;
-const int NOTE_B5 = 988;
+const int NOTE_G5 = 784;
+const int NOTE_A5 = 880;
 const int NOTE_D6 = 977;
+const int NOTE_B5 = 988;
+const int NOTE_C6 = 1047;
 
 void setup() {
   Serial.begin(9600);
@@ -160,8 +170,19 @@ int selectaThemeSongNotes[] = {
   NOTE_D6, NOTE_C6,
 };
 
-int selectaThemeSongBaseTempo = 600; // Adjusted base tempo
+int selectaThemeSongBaseTempo = 600;
 int selectaThemeSongSize = sizeof(selectaThemeSongNotes) / sizeof(selectaThemeSongNotes[0]);
+
+// Nokia Ringtone 
+// Score from at https://musescore.com/user/29944637/scores/5266155
+int nokiaRingtoneNotes[] = {
+  NOTE_E5, 8, NOTE_D5, 8, NOTE_FS4, 4, NOTE_GS4, 4, 
+  NOTE_CS5, 8, NOTE_B4, 8, NOTE_D4, 4, NOTE_E4, 4, 
+  NOTE_B4, 8, NOTE_A4, 8, NOTE_CS4, 4, NOTE_E4, 4,
+  NOTE_A4, 2, 
+};
+int nokiaRingtoneTempo = 150;
+int nokiaRingtoneSize = sizeof(nokiaRingtoneNotes) / sizeof(nokiaRingtoneNotes[0]);
 
 void correctPassword() {
   // Iterate through each note in the melody
@@ -183,16 +204,24 @@ void correctPassword() {
 
 // Function for incorrect password input
 void incorrectPassword() {
-  // Blink all LEDs three times
-  for (int j = 0; j < 3; j++) {
-    for (int i = 0; i < numLeds; i++) {
-      digitalWrite(ledPins[i], HIGH);
+  // Iterate through each note in the melody
+  for (int i = 0; i < nokiaRingtoneSize; i++) {
+    // Turn on all LEDs
+    for (int j = 0; j < numLeds; j++) {
+      digitalWrite(ledPins[j], HIGH);
     }
-    delay(500);
-    for (int i = 0; i < numLeds; i++) {
-      digitalWrite(ledPins[i], LOW);
+    // Play note
+    tone(buzzerPin, nokiaRingtoneNotes[i]);
+    // Wait for the duration of the note
+    delay(nokiaRingtoneTempo);
+    // Turn off all LEDs
+    for (int j = 0; j < numLeds; j++) {
+      digitalWrite(ledPins[j], LOW);
     }
-    delay(500); 
+    // Stop tone
+    noTone(buzzerPin);
+    // Add a short delay between notes
+    delay(50);
   }
 }
 

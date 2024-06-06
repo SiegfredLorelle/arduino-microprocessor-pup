@@ -1,5 +1,7 @@
+// Include specific libraries
 #include <Keypad.h>
 #include <LiquidCrystal_I2C.h>
+#include <EEPROM.h>
 
 // Define LCD properties
 LiquidCrystal_I2C lcd(0x27, 16, 2);

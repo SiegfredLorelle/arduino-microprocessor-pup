@@ -56,6 +56,7 @@ void loop() {
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("ACCESS DENIED!!!");
+      incorrectPassword(); 
       delay(2000);
       lcd.clear();
       lcd.setCursor(0, 0);
@@ -129,6 +130,9 @@ String getPassword(String prompt) {
 void disableKeypad() {
   while (true) {
     lcd.clear();
+    for (int i = 0; i < numLeds; i++) {
+      digitalWrite(ledPins[i], HIGH);
+    }
   }
 }
 
@@ -138,5 +142,19 @@ void correctPassword() {
     digitalWrite(ledPins[i], HIGH);
     delay(500);                      
     digitalWrite(ledPins[i], LOW);  
+  }
+}
+
+void incorrectPassword() {
+  // Blink all LEDs three times
+  for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < numLeds; i++) {
+      digitalWrite(ledPins[i], HIGH);
+    }
+    delay(500);
+    for (int i = 0; i < numLeds; i++) {
+      digitalWrite(ledPins[i], LOW);
+    }
+    delay(500); 
   }
 }

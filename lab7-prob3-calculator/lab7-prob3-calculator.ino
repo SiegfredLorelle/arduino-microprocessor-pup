@@ -150,20 +150,27 @@ String processOperation(char currOperator, String strNum1, String strNum2) {
     if (strNum1.length() == 0 || strNum2.length() == 0) return strNum1;
     float num1 = strNum1.toFloat(); 
     float num2 = strNum2.toFloat(); 
+    float res;
 
     if (currOperator == '+') {
-      return String(num1 + num2);
+      res = num1 + num2;
     }
-    if (currOperator == '-') {
-      return String(num1 - num2);
+    else if (currOperator == '-') {
+      res = num1 - num2;
     }
-    if (currOperator == '*') {
-      return String(num1 * num2);
+    else if (currOperator == '*') {
+      res = num1 * num2;
     }
-    if (currOperator == '/') {
-      return String(num1 / num2);
+    else if (currOperator == '/') {
+      res = num1 / num2;
     }
+    
+    if (isnan(res) || isinf(res)) res = 0;
+    return String(res);
 }
+
 // Handle edge cases
 // Clear all
 // Do not display redundancy
+// Remove negative if res = 0
+// Limit result

@@ -81,14 +81,18 @@ void menu() {
 char currOperator = ' ';
 int currRow = 0;
 void calculator() {
+    String strNum1;
+    String strNum2;
+
   while (true) {
-    String strNum1 = getDigit();
+    strNum1 = getDigit();
     int num1 = strNum1.toInt();
     Serial.println(num1);
     Serial.println(currOperator);
-    // printDigit(0, strNum1);
-    // Display num1
+    
+    processOperation();
     // Display operator
+
     // Get 2nd num
     
 
@@ -104,11 +108,11 @@ String getDigit() {
       if (strDigit.length() == 15) continue;
       strDigit += key;
       Serial.println(strDigit);
-      printDigit(currRow, strDigit);
+      displayDigit(currRow, strDigit);
     }
     else if (key == 'C') {
       strDigit = "";
-      printDigit(currRow, strDigit);
+      displayDigit(currRow, strDigit);
     }
     else if (key && strDigit.length() > 0) {
       currOperator = key;
@@ -117,10 +121,21 @@ String getDigit() {
   }
 }
 
-void printDigit(int row, String strDigit) {
-  lcd.clear();
+void displayDigit(int row, String strDigit) {
+  lcd.setCursor(1, row);
+  lcd.print("               ");
   lcd.setCursor(16 - strDigit.length(), row);
   lcd.print(strDigit);
 }
-// Handle more than 16 chars (or cap at 16)
+
+void displayOperator(char currOperator) {
+    lcd.setCursor(0, 1);
+    lcd.print(currOperator);
+}
+
+void processOperation() {
+    if (currOperator != '=') {
+      displayOperator(currOperator);
+    }
+}
 // Handle edge cases

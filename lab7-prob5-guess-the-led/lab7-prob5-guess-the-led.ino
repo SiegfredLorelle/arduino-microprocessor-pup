@@ -88,7 +88,7 @@ void setup() {
   }
 
   // Initialize the random seed
-  randomSeed(analogRead(49));
+  randomSeed(analogRead(10));
 }
 
 void loop() {
@@ -107,7 +107,7 @@ void loop() {
   delay(3000);
 
   // Get the user's guess
-  String guess = userGuess();
+  int guess = userGuess();
 
   // Display the guess on the LCD
   lcd.clear();
@@ -161,26 +161,33 @@ int randomLED() {
 }
 
 // Function to get user's guess
-String userGuess() {
-  // Ask user for a guess
+int userGuess() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Enter guess: ");
 
   String guess = "";
+
   while (true) {
     char key = keypad.getKey();
     if (key) {
       if (key == '#') {
         lcd.clear();
         break;
-      } else {
-        guess += key;
+      } else if (key >= '0' && key <= '6') {  // Only accept valid digits (1-6)
+        guess += key;  
         lcd.print(key); 
+      } else {
+        lcd.setCursor(0, 1);
+        lcd.print("Invalid input");
+        delay(1000);
+        lcd.setCursor(0, 1);
+        lcd.print("              ");
       }
     }
   }
-  return guess;
+
+  return guess.toInt();
 }
 
 // Function to play Selecta Theme Song

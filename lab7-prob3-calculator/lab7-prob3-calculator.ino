@@ -81,19 +81,24 @@ void menu() {
 char currOperator = ' ';
 int currRow = 0;
 void calculator() {
-    String strNum1 = "";
-    String strNum2 = "";
-    // int num1;
-    // int num2;
+    String strNums[2] = {
+      "",
+      "",
+    };
 
   while (true) {
-    strNum1 = getDigit();
-    // strNum1;
-    Serial.println(strNum1);
+    strNums[currRow] = getDigit();
+    // strNums1;
+    Serial.println(strNums[currRow]);
     Serial.println(currOperator);
-    currRow = 1;
     
-    processOperation(strNum1, strNum2);
+    String result = processOperation(currOperator, strNums[0], strNums[1]);
+    strNums[0] = result;
+    strNums[1] = "";
+    displayDigit(0, strNums[0]);
+    displayDigit(1, strNums[1]);
+    currRow = 1;
+
 
     // Get 2nd num
     
@@ -106,6 +111,7 @@ String getDigit() {
   while (true) {
     char key = keypad.getKey();
 
+    if (!key) continue;
     if (isDigit(key)) {
       if (strDigit.length() == 15) continue;
       strDigit += key;
@@ -116,9 +122,11 @@ String getDigit() {
       strDigit = "";
       displayDigit(currRow, strDigit);
     }
-    else if (key) {
-      currOperator = key;
-      displayOperator(currOperator);
+    else {
+      if (key != '=') {
+        currOperator = key;
+        displayOperator(currOperator);
+      }
       if (strDigit.length() > 0) return strDigit;
     }
   }
@@ -132,15 +140,30 @@ void displayDigit(int row, String strDigit) {
 }
 
 void displayOperator(char currOperator) {
-    if (currOperator != '=') {
-      lcd.setCursor(0, 1);
-      lcd.print(currOperator);
-    }
+    lcd.setCursor(0, 1);
+    lcd.print(currOperator);
 }
 
-void processOperation(String num1, String num2) {
+String processOperation(char currOperator, String strNum1, String strNum2) {
       // displayOperator(currOperator);
     // }
-    // if (num).
+    if (strNum1.length() == 0 || strNum2.length() == 0) return strNum1;
+    float num1 = strNum1.toFloat(); 
+    float num2 = strNum2.toFloat(); 
+
+    if (currOperator == '+') {
+      return String(num1 + num2);
+    }
+    if (currOperator == '-') {
+      return String(num1 - num2);
+    }
+    if (currOperator == '*') {
+      return String(num1 * num2);
+    }
+    if (currOperator == '/') {
+      return String(num1 / num2);
+    }
 }
 // Handle edge cases
+// Clear all
+// Do not display redundancy

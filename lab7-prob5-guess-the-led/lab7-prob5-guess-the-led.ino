@@ -137,6 +137,10 @@ void loop() {
 
   // Wait for a few seconds before restarting the game
   delay(3000);
+
+  for (int i = 0; i < numLeds; i++) {
+    digitalWrite(ledPins[i], LOW);
+  }
 }
 
 // Function to randomly light one LED and return the LED number (1-6)

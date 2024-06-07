@@ -79,11 +79,14 @@ void menu() {
 
 
 char currOperator = ' ';
+int currRow = 0;
 void calculator() {
   while (true) {
-    int num1 = getDigit();
+    String strNum1 = getDigit();
+    int num1 = strNum1.toInt();
     Serial.println(num1);
     Serial.println(currOperator);
+    // printDigit(0, strNum1);
     // Display num1
     // Display operator
     // Get 2nd num
@@ -92,24 +95,32 @@ void calculator() {
   }
 }
 
-int getDigit() {
-  String stringDigit = "";
+String getDigit() {
+  String strDigit = "";
   while (true) {
     char key = keypad.getKey();
 
     if (isDigit(key)) {
-      stringDigit += key;
-      Serial.println(stringDigit);
+      if (strDigit.length() == 15) continue;
+      strDigit += key;
+      Serial.println(strDigit);
+      printDigit(currRow, strDigit);
     }
     else if (key == 'C') {
-      stringDigit = "";
+      strDigit = "";
+      printDigit(currRow, strDigit);
     }
-    else if (key && stringDigit.length() > 0) {
+    else if (key && strDigit.length() > 0) {
       currOperator = key;
-      return stringDigit.toInt();
+      return strDigit;
     }
   }
 }
 
+void printDigit(int row, String strDigit) {
+  lcd.clear();
+  lcd.setCursor(16 - strDigit.length(), row);
+  lcd.print(strDigit);
+}
 // Handle more than 16 chars (or cap at 16)
 // Handle edge cases

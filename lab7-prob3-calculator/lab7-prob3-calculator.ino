@@ -148,9 +148,9 @@ void displayOperator(char currOperator) {
 String processOperation(String strNum1, String strNum2) {
     if (strNum1.length() == 0 || strNum2.length() == 0) return strNum1;
 
-    float num1 = strNum1.toFloat(); 
-    float num2 = strNum2.toFloat(); 
-    float res;
+    double num1 = strNum1.toDouble(); 
+    double num2 = strNum2.toDouble(); 
+    double res;
 
     if (currOperator == '+') {
       res = num1 + num2;
@@ -193,7 +193,14 @@ String trimDigit(String digit) {
   }
 
 
+
   String newDigit = digit.substring(start, end + 1);
+  if (newDigit == "-0.") {
+    Serial.println("PUMASOK");
+    Serial.println("");
+    newDigit = newDigit.substring(1, newDigit.length() -1);
+  }
+
   if (newDigit[0] == '.') {
     newDigit = "0" + newDigit;
   }
@@ -201,9 +208,17 @@ String trimDigit(String digit) {
     newDigit.remove(newDigit.length() - 1);
   }
 
+  if (newDigit.length() > 15) {
+    if (newDigit[0] == '-') newDigit = "-99999999999999";
+    else newDigit = "999999999999999";
+  }
+  
+
   return newDigit;
 
 }
+
+
 
 // Handle edge cases
 // Clear all

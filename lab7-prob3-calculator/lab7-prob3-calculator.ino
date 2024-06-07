@@ -81,17 +81,19 @@ void menu() {
 char currOperator = ' ';
 int currRow = 0;
 void calculator() {
-    String strNum1;
-    String strNum2;
+    String strNum1 = "";
+    String strNum2 = "";
+    // int num1;
+    // int num2;
 
   while (true) {
     strNum1 = getDigit();
-    int num1 = strNum1.toInt();
-    Serial.println(num1);
+    // strNum1;
+    Serial.println(strNum1);
     Serial.println(currOperator);
+    currRow = 1;
     
-    processOperation();
-    // Display operator
+    processOperation(strNum1, strNum2);
 
     // Get 2nd num
     
@@ -114,9 +116,10 @@ String getDigit() {
       strDigit = "";
       displayDigit(currRow, strDigit);
     }
-    else if (key && strDigit.length() > 0) {
+    else if (key) {
       currOperator = key;
-      return strDigit;
+      displayOperator(currOperator);
+      if (strDigit.length() > 0) return strDigit;
     }
   }
 }
@@ -129,13 +132,15 @@ void displayDigit(int row, String strDigit) {
 }
 
 void displayOperator(char currOperator) {
-    lcd.setCursor(0, 1);
-    lcd.print(currOperator);
+    if (currOperator != '=') {
+      lcd.setCursor(0, 1);
+      lcd.print(currOperator);
+    }
 }
 
-void processOperation() {
-    if (currOperator != '=') {
-      displayOperator(currOperator);
-    }
+void processOperation(String num1, String num2) {
+      // displayOperator(currOperator);
+    // }
+    // if (num).
 }
 // Handle edge cases
